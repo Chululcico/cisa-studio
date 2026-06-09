@@ -461,7 +461,7 @@ select option { background: var(--surface); color: var(--text); }
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Correo electrónico</label>
-            <input class="form-input" id="cfgEmail" placeholder="Carlosalonsan2008@gmail.com">
+            <input class="form-input" id="cfgEmail" placeholder="carlosalonsan2008@gmail.com">
           </div>
           <div class="form-group"></div>
         </div>
@@ -483,7 +483,7 @@ select option { background: var(--surface); color: var(--text); }
           </div>
           <div class="form-group">
             <label class="form-label">✉️ Carlos</label>
-            <input class="form-input" id="cfgEmailCarlos" placeholder="Carlosalonsan2008@gmail.com">
+            <input class="form-input" id="cfgEmailCarlos" placeholder="carlosalonsan2008@gmail.com">
           </div>
         </div>
         <div class="form-row">
@@ -691,10 +691,10 @@ function getDefaultAuth() {
     addressCarlos: 'Calle Salamanca número 53',
     addressIker: 'Calle Salamanca número 45',
     phone: '688790018',
-    email: 'Carlosalonsan2008@gmail.com',
+    email: 'carlosalonsan2008@gmail.com',
     phoneCarlos: '688790018',
     phoneIker: '613022267',
-    emailCarlos: 'Carlosalonsan2008@gmail.com',
+    emailCarlos: 'carlosalonsan2008@gmail.com',
     emailIker: 's4nchezzakatyrkk@gmail.com',
     scheme: 'cisa'
   };
@@ -808,7 +808,7 @@ function saveCompany() {
   authData.addressIker = document.getElementById('cfgAddressIker').value.trim();
   authData.phoneCarlos = document.getElementById('cfgPhoneCarlos').value.trim();
   authData.phoneIker = document.getElementById('cfgPhoneIker').value.trim();
-  authData.emailCarlos = document.getElementById('cfgEmailCarlos').value.trim();
+  authData.emailCarlos = document.getElementById('cfgEmailCarlos').value.trim().toLowerCase();
   authData.emailIker = document.getElementById('cfgEmailIker').value.trim();
   saveAuth();
   showToast('Datos de empresa guardados');

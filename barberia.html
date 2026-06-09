@@ -176,9 +176,13 @@ section { padding: 80px 24px; }
   align-items: center; justify-content: center;
 }
 .gallery-slide {
-  position: absolute; border-radius: var(--radius); overflow: hidden;
+  position: absolute; border-radius: var(--radius);
   transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: 1px solid var(--border);
+}
+.gallery-slide-inner {
+  position: relative; width: 100%; height: 100%; overflow: hidden;
+  border-radius: var(--radius);
 }
 .gallery-slide img, .gallery-slide video {
   width: 100%; height: 100%; object-fit: cover; display: block;
@@ -207,14 +211,8 @@ section { padding: 80px 24px; }
 .gallery-arrow:hover { background: rgba(0,0,0,0.75); transform: translateY(-50%) scale(1.1); }
 .gallery-arrow-left { left: 16px; }
 .gallery-arrow-right { right: 16px; }
-.gallery-badge {
-  position: absolute; bottom: 8px; right: 8px; z-index: 4;
-  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;
-  padding: 3px 10px; border-radius: 20px;
-  background: rgba(10,10,10,0.75); backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.gallery-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+.gallery-dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+.gallery-caption { text-align: center; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; margin-top: 16px; }
 .gallery-dot {
   width: 8px; height: 8px; border-radius: 50%; background: var(--text-tertiary);
   border: none; cursor: pointer; transition: all 0.2s; padding: 0;
@@ -507,6 +505,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
     <p class="section-desc">Trabajos realizados por Carlos e Iker. Desliza para ver más.</p>
     <div class="gallery-carousel-wrap">
       <div class="gallery-track" id="galleryTrack"></div>
+      <div class="gallery-caption" id="galleryCaption"></div>
       <div class="gallery-dots" id="galleryDots"></div>
     </div>
   </div>
@@ -527,11 +526,11 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
         <div style="font-size:0.72rem;color:var(--accent-2);font-weight:600;letter-spacing:0.5px">Carlos</div>
         <div class="contact-row">
           <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <a class="contact-link" href="tel:688790018" id="contactPhoneCarlos">688790018</a>
+          <a class="contact-link" href="tel:688790018" id="contactPhoneCarlos">688-790-018</a>
         </div>
         <div class="contact-row">
           <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <a class="contact-link" href="mailto:Carlosalonsan2008@gmail.com" id="contactEmailCarlos">Carlosalonsan2008@gmail.com</a>
+          <a class="contact-link" href="mailto:carlosalonsan2008@gmail.com" id="contactEmailCarlos">carlosalonsan2008@gmail.com</a>
         </div>
         <div class="contact-row">
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -540,7 +539,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
         <div style="margin:12px 0 4px;font-size:0.72rem;color:var(--accent-2);font-weight:600;letter-spacing:0.5px">Iker</div>
         <div class="contact-row">
           <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <a class="contact-link" href="tel:613022267" id="contactPhoneIker">613022267</a>
+          <a class="contact-link" href="tel:613022267" id="contactPhoneIker">613-022-267</a>
         </div>
         <div class="contact-row">
           <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -707,6 +706,7 @@ function getDefaultData() {
 }
 function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
 
+function formatPhone(n) { return n.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'); }
 const clockSvg = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>';
 let selectedBarber = null;
 let selectedTime = null;
@@ -933,10 +933,16 @@ function showToast(msg) {
 // ====== GALLERY ======
 const galleryMedia = [
   { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg', barber:'carlos' },
-  { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
-  { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
+  { type:'image', src:'https://i.postimg.cc/pVBTmxYg/Whats-App-Image-2026-06-09-at-23-25-42.jpg', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/m0wnp5.mp4', barber:'carlos' },
   { type:'video', src:'https://files.catbox.moe/j2hy0i.MOV', barber:'iker' },
+  { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
+  { type:'image', src:'https://i.postimg.cc/jqh5DKQm/Whats-App-Image-2026-06-09-at-23-25-30.jpg', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/j4tz6o.mp4', barber:'carlos' },
   { type:'video', src:'https://files.catbox.moe/44t9gb.MOV', barber:'iker' },
+  { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
+  { type:'image', src:'https://i.postimg.cc/xjPCXYyB/Whats-App-Image-2026-06-09-at-23-25-14.jpg', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/vbp6kk.mp4', barber:'carlos' },
   { type:'video', src:'https://files.catbox.moe/kl5b1h.MOV', barber:'iker' },
 ];
 let galleryIndex = 0;
@@ -954,12 +960,19 @@ function renderGallery() {
     const m = galleryMedia[s.i];
     const tag = m.type === 'video' ? 'video' : 'img';
     const srcAttr = 'src';
-    const extra = m.type === 'video' ? ' muted autoplay loop playsinline webkit-playsinline' : ' loading="lazy"';
+    const extra = m.type === 'video' ? ' muted autoplay loop playsinline webkit-playsinline preload="auto"' : ' loading="lazy"';
     const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
-    const barberLabel = m.barber === 'iker' ? 'Iker' : 'Carlos';
-    const badgeColor = m.barber === 'iker' ? 'var(--accent-2)' : 'var(--accent-1)';
-    return `<div class="gallery-slide ${s.cls}">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}><div class="gallery-badge" style="color:${badgeColor}">${barberLabel}</div></div>`;
+    const badgeColor = m.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
+    return `<div class="gallery-slide ${s.cls}" style="border-color:${badgeColor}"><div class="gallery-slide-inner">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}></div></div>`;
   }).join('');
+  const active = galleryMedia[galleryIndex];
+  const caption = document.getElementById('galleryCaption');
+  if (caption) {
+    const name = active.barber === 'iker' ? 'Iker' : 'Carlos';
+    const col = active.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
+    caption.innerHTML = '— ' + name + ' —';
+    caption.style.color = col;
+  }
   renderDots();
 }
 function getPrevIndex(i) { return i === 0 ? galleryMedia.length - 1 : i - 1; }
@@ -1030,13 +1043,13 @@ function renderPrices() {
         var el = document.getElementById('contactAddressIker'); if (el) { el.textContent = auth.addressIker; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressIker + ' Elda'); }
       }
       if (auth.phoneCarlos) {
-        var el = document.getElementById('contactPhoneCarlos'); if (el) { el.textContent = auth.phoneCarlos; el.href = 'tel:' + auth.phoneCarlos; }
+        var el = document.getElementById('contactPhoneCarlos'); if (el) { el.textContent = formatPhone(auth.phoneCarlos); el.href = 'tel:' + auth.phoneCarlos; }
       }
       if (auth.phoneIker) {
-        var el = document.getElementById('contactPhoneIker'); if (el) { el.textContent = auth.phoneIker; el.href = 'tel:' + auth.phoneIker; }
+        var el = document.getElementById('contactPhoneIker'); if (el) { el.textContent = formatPhone(auth.phoneIker); el.href = 'tel:' + auth.phoneIker; }
       }
       if (auth.emailCarlos) {
-        var el = document.getElementById('contactEmailCarlos'); if (el) { el.textContent = auth.emailCarlos; el.href = 'mailto:' + auth.emailCarlos; }
+        var el = document.getElementById('contactEmailCarlos'); if (el) { var e = auth.emailCarlos.toLowerCase(); el.textContent = e; el.href = 'mailto:' + e; }
       }
       if (auth.emailIker) {
         var el = document.getElementById('contactEmailIker'); if (el) { el.textContent = auth.emailIker; el.href = 'mailto:' + auth.emailIker; }
