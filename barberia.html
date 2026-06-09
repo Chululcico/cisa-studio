@@ -933,15 +933,15 @@ const galleryMedia = [
   { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg', barber:'carlos' },
   { type:'image', src:'https://i.postimg.cc/pVBTmxYg/Whats-App-Image-2026-06-09-at-23-25-42.jpg', barber:'iker' },
   { type:'video', src:'https://files.catbox.moe/m0wnp5.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/j2hy0i.MOV', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/4wqr9r.mp4', barber:'iker' },
   { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
   { type:'image', src:'https://i.postimg.cc/1zwK1fhf/12.jpg', barber:'iker' },
   { type:'video', src:'https://files.catbox.moe/j4tz6o.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/44t9gb.MOV', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/nz1ian.mp4', barber:'iker' },
   { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
   { type:'image', src:'https://i.postimg.cc/xjPCXYyB/Whats-App-Image-2026-06-09-at-23-25-14.jpg', barber:'iker' },
   { type:'video', src:'https://files.catbox.moe/vbp6kk.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/kl5b1h.MOV', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
 ];
 let galleryIndex = 0;
 
@@ -958,7 +958,7 @@ function renderGallery() {
     const m = galleryMedia[s.i];
     const tag = m.type === 'video' ? 'video' : 'img';
     const srcAttr = 'src';
-    const extra = m.type === 'video' ? ' muted autoplay loop playsinline webkit-playsinline preload="auto"' : ' loading="lazy"';
+    const extra = m.type === 'video' ? ' muted autoplay loop playsinline webkit-playsinline preload="metadata"' : ' loading="lazy"';
     const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
     const badgeColor = m.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
     return `<div class="gallery-slide ${s.cls}" style="border-color:${badgeColor}"><div class="gallery-slide-inner">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}></div></div>`;
