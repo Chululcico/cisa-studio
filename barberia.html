@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CISA · Barbería & Estilo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A;
+  --surface: #141414;
+  --surface2: #1C1C1E;
+  --border: #2A2A2C;
+  --border2: #38383A;
+  --text: #F5F5F0;
+  --text-secondary: #98989D;
+  --text-tertiary: #636366;
+  --accent-1: #F2B5C8;
+  --accent-2: #C9A4D4;
+  --gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+  --gradient-subtle: linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 10%, transparent), color-mix(in srgb, var(--accent-2) 10%, transparent));
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; position: relative; }
+
+/* BACKGROUND DECORATIVE ELEMENTS */
+.bg-deco {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.bg-deco .orb {
+  position: absolute; border-radius: 50%;
+}
+.bg-deco .orb-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-1) 5%, transparent), transparent 70%);
+  top: -200px; right: -200px; filter: blur(80px);
+}
+.bg-deco .orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 4%, transparent), transparent 70%);
+  bottom: -100px; left: -100px; filter: blur(60px);
+}
+.bg-deco .orb-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-1) 2.5%, transparent), transparent 70%);
+  top: 40%; left: 5%; filter: blur(50px);
+}
+.bg-deco .orb-4 {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 3%, transparent), transparent 70%);
+  top: 25%; right: 10%; filter: blur(40px);
+}
+.bg-deco .orb-5 {
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-1) 2.5%, transparent), transparent 70%);
+  bottom: 20%; right: 15%; filter: blur(30px);
+}
+.bg-deco .circle-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent-1) 4%, transparent);
+}
+.bg-deco .circle-ring-1 { width: 600px; height: 600px; top: 5%; right: 5%; }
+.bg-deco .circle-ring-2 { width: 900px; height: 900px; bottom: -250px; left: -200px; border-color: color-mix(in srgb, var(--accent-2) 3%, transparent); }
+.bg-deco .circle-ring-3 { width: 350px; height: 350px; top: 55%; left: 40%; border-color: color-mix(in srgb, var(--accent-1) 2.5%, transparent); }
+.bg-deco .circle-dot {
+  position: absolute; border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-1) 3.5%, transparent);
+}
+.bg-deco .circle-dot-1 { width: 8px; height: 8px; top: 15%; left: 12%; }
+.bg-deco .circle-dot-2 { width: 5px; height: 5px; top: 70%; right: 20%; background: color-mix(in srgb, var(--accent-2) 4%, transparent); }
+.bg-deco .circle-dot-3 { width: 12px; height: 12px; bottom: 30%; left: 8%; background: color-mix(in srgb, var(--accent-1) 2%, transparent); }
+.bg-deco .circle-dot-4 { width: 6px; height: 6px; top: 45%; right: 35%; }
+
+/* All content above background */
+nav, section, footer { position: relative; z-index: 1; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  background: rgba(10,10,10,0.85); backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  height: 60px; display: flex; align-items: center; justify-content: center;
+}
+.nav-inner { width: 100%; max-width: 1120px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { height: 30px; width: auto; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+.nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--gradient); color: #0A0A0A; padding: 8px 20px; border-radius: 20px;
+  font-size: 0.85rem; font-weight: 600; text-decoration: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.nav-cta:hover { opacity: 0.9; transform: scale(1.03); }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 100px 24px 80px; position: relative; overflow: hidden;
+}
+.hero-inner { max-width: 1120px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
+.hero-text { display: flex; flex-direction: column; }
+.hero-logo { max-width: 100%; height: auto; max-height: 480px; object-fit: contain; }
+.hero h1 { font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 700; letter-spacing: -1px; line-height: 1.1; margin-bottom: 16px; }
+.hero h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7; max-width: 440px; margin-bottom: 28px; }
+.hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-btn-primary {
+  background: var(--gradient); color: #0A0A0A; padding: 14px 32px; border-radius: 28px;
+  font-weight: 600; font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.hero-btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+.hero-btn-outline {
+  background: transparent; color: var(--text); padding: 14px 28px; border-radius: 28px;
+  font-weight: 500; font-size: 0.9rem; text-decoration: none; border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.2s;
+}
+.hero-btn-outline:hover { border-color: var(--accent-2); color: var(--accent-2); }
+
+/* SECTIONS */
+section { padding: 80px 24px; }
+.section-inner { max-width: 1120px; margin: 0 auto; }
+.section-label {
+  display: inline-block; font-size: 0.7rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  background: var(--gradient-subtle); color: var(--accent-2); padding: 4px 14px; border-radius: 20px; margin-bottom: 10px;
+}
+.section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 12px; }
+.section-desc { color: var(--text-secondary); font-size: 1rem; line-height: 1.7; max-width: 520px; }
+#servicios, #horarios, .hero { background: transparent; }
+#barberos, #citas { background: rgba(255,255,255,0.015); backdrop-filter: blur(4px); }
+
+/* SERVICES */
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 32px; }
+.service-card {
+  background: var(--surface); border-radius: var(--radius); padding: 28px 24px;
+  border: 1px solid var(--border); transition: all 0.2s;
+  display: flex; flex-direction: column;
+}
+.service-card:hover { border-color: var(--border2); box-shadow: var(--shadow-sm); }
+.service-icon { margin-bottom: 14px; font-size: 1.8rem; line-height: 1; }
+.service-name { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+.service-desc { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.6; margin-bottom: 16px; flex: 1; }
+.service-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border); }
+.service-duration { font-size: 0.72rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
+.service-duration svg { width: 14px; height: 14px; stroke: var(--text-tertiary); fill: none; stroke-width: 1.5; }
+
+/* BARBERS */
+.barbers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+.barber-card { background: var(--bg); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); transition: all 0.2s; }
+.barber-card:hover { box-shadow: var(--shadow-sm); border-color: var(--border2); }
+.barber-img { width: 100%; height: 280px; object-fit: cover; display: block; }
+.barber-body { padding: 24px; }
+.barber-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 2px; }
+.barber-role { font-size: 0.75rem; color: var(--accent-2); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 10px; }
+.barber-bio { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.7; margin-bottom: 12px; }
+.barber-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.barber-tag { padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; background: var(--gradient-subtle); color: var(--accent-2); }
+.barber-prices { border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.barber-price-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+.barber-price-name { color: var(--text-secondary); }
+.barber-price-val { font-weight: 600; }
+
+/* GALLERY / CORTES REALIZADOS */
+.gallery-section { overflow: hidden; }
+.gallery-carousel-wrap { position: relative; margin-top: 32px; max-width: 800px; margin-left: auto; margin-right: auto; }
+.gallery-track {
+  position: relative; min-height: 420px; display: flex;
+  align-items: center; justify-content: center;
+}
+.gallery-slide {
+  position: absolute; border-radius: var(--radius); overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid var(--border);
+}
+.gallery-slide img, .gallery-slide video {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.gallery-slide.active {
+  width: 360px; height: 400px; z-index: 3; opacity: 1; filter: none;
+  box-shadow: var(--shadow-lg); border-color: var(--border2);
+  cursor: default;
+}
+.gallery-slide.side {
+  width: 160px; height: 220px; z-index: 2;
+  filter: blur(3px) brightness(0.5); opacity: 0.5;
+  cursor: pointer; border-color: transparent;
+}
+.gallery-slide.side:hover { opacity: 0.7; }
+.gallery-slide.side-left { transform: translateX(-240px); }
+.gallery-slide.side-right { transform: translateX(240px); }
+.gallery-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,0.5); color: #fff; border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; transition: all 0.2s;
+  backdrop-filter: blur(4px); font-family: 'Inter', sans-serif;
+}
+.gallery-arrow:hover { background: rgba(0,0,0,0.75); transform: translateY(-50%) scale(1.1); }
+.gallery-arrow-left { left: 16px; }
+.gallery-arrow-right { right: 16px; }
+.gallery-badge {
+  position: absolute; bottom: 8px; right: 8px; z-index: 4;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+  color: #D4708A; border: 1px solid rgba(212,112,138,0.3);
+}
+.gallery-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+.gallery-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--text-tertiary);
+  border: none; cursor: pointer; transition: all 0.2s; padding: 0;
+}
+.gallery-dot.active { background: var(--accent-2); width: 24px; border-radius: 4px; }
+.gallery-dot:hover { background: var(--accent-1); }
+
+@media (max-width: 768px) {
+  .gallery-slide.active { width: 240px; height: 300px; }
+  .gallery-slide.side { width: 100px; height: 150px; }
+  .gallery-slide.side-left { transform: translateX(-140px); }
+  .gallery-slide.side-right { transform: translateX(140px); }
+  .gallery-arrow { width: 30px; height: 30px; font-size: 0.9rem; }
+  .gallery-arrow-left { left: 8px; }
+  .gallery-arrow-right { right: 8px; }
+  .gallery-track { min-height: 320px; }
+}
+
+/* SCHEDULE */
+.schedule-wrap { margin-top: 32px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: start; }
+.schedule-table { width: 100%; border-collapse: collapse; }
+.schedule-table th { text-align: left; padding: 10px 14px; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-tertiary); border-bottom: 1px solid var(--border); }
+.schedule-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.schedule-table tr:last-child td { border-bottom: none; }
+.day-name { font-weight: 500; }
+.today-row td { background: var(--gradient-subtle); }
+.today-row .day-name { color: var(--accent-2); }
+.hours-cell { color: var(--text-secondary); }
+.closed { color: var(--text-tertiary); font-style: italic; }
+.badge-schedule { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; }
+.badge-open { background: rgba(52,199,89,0.1); color: #34C759; }
+.badge-closed { background: rgba(255,69,58,0.1); color: #FF453A; }
+.schedule-note { padding: 16px 20px; border-radius: var(--radius-sm); background: var(--surface); font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; border: 1px solid var(--border); }
+.schedule-note .contact-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.schedule-note .contact-row:last-child { margin-bottom: 0; }
+.schedule-note .contact-row svg { width: 16px; height: 16px; stroke: var(--accent-2); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+.schedule-note .contact-link { color: var(--text); text-decoration: none; transition: color 0.2s; }
+.schedule-note .contact-link:hover { color: var(--accent-2); }
+
+/* BOOKING */
+.booking-form { background: var(--bg); border-radius: var(--radius); padding: 32px; border: 1px solid var(--border); box-shadow: var(--shadow-md); margin: 32px auto 0; max-width: 640px; }
+.form-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 24px; }
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 6px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 12px 14px; background: var(--surface);
+  border: 1px solid var(--border); color: var(--text); font-family: 'Inter', sans-serif;
+  font-size: 0.9rem; outline: none; transition: border-color 0.2s; border-radius: var(--radius-sm);
+  -webkit-appearance: none; appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent-2); }
+.form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23636366' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+.form-select option { background: var(--surface); color: var(--text); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-textarea { resize: vertical; min-height: 70px; }
+
+.barber-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+.barber-option {
+  padding: 14px; background: var(--surface); border-radius: var(--radius-sm); cursor: pointer;
+  border: 2px solid var(--border); transition: all 0.25s; text-align: center;
+}
+.barber-option:hover { border-color: var(--accent-2); }
+.barber-option.selected { border-color: var(--accent-2); background: var(--gradient-subtle); }
+.barber-opt-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+
+
+/* DATE-TIME PICKER */
+.dt-picker-btn {
+  width: 100%; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-family: 'Inter', sans-serif;
+  font-size: 0.9rem; cursor: pointer; transition: all 0.2s; text-align: left; display: flex; align-items: center; gap: 10px;
+  -webkit-appearance: none; appearance: none;
+}
+.dt-picker-btn:hover, .dt-picker-btn:focus { border-color: var(--accent-2); }
+.dt-picker-btn .dt-arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.7rem; color: var(--text-tertiary); }
+.dt-picker-btn.open .dt-arrow { transform: rotate(180deg); }
+.dt-picker-btn .dt-label { color: var(--text-tertiary); }
+.dt-picker-btn .dt-value { color: var(--accent-2); font-weight: 500; }
+.dt-picker-btn .dt-cal-icon svg { width: 18px; height: 18px; stroke: var(--text-tertiary); fill: none; stroke-width: 1.5; display: block; }
+.dt-picker-body { display: none; margin-top: 12px; animation: fadeIn 0.25s ease; }
+.dt-picker-body.open { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-nav { background: none; border: 1px solid var(--border); color: var(--text-secondary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.cal-nav:hover { border-color: var(--accent-2); color: var(--accent-2); }
+.cal-month { font-size: 0.88rem; font-weight: 600; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dow { font-size: 0.6rem; text-align: center; color: var(--text-tertiary); padding: 6px 0; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.cal-day {
+  padding: 8px 4px; text-align: center; font-size: 0.82rem; border-radius: 8px;
+  cursor: pointer; transition: all 0.15s; color: var(--text-secondary); font-weight: 500;
+}
+.cal-day:hover { background: var(--gradient-subtle); color: var(--accent-2); }
+.cal-day.today { background: var(--gradient-subtle); color: var(--accent-2); font-weight: 700; }
+.cal-day.selected { background: var(--gradient); color: #0A0A0A; font-weight: 700; }
+.cal-day.other-month { opacity: 0.2; cursor: default; pointer-events: none; }
+.cal-day.past { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+
+.time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 14px; }
+.time-slot {
+  padding: 10px 4px; text-align: center; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); font-size: 0.8rem; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.2s; font-weight: 500; background: var(--surface);
+}
+.time-slot:hover { border-color: var(--accent-2); color: var(--accent-2); background: var(--gradient-subtle); }
+.time-slot.selected { background: var(--gradient); color: #0A0A0A; border-color: transparent; }
+.time-slot.occupied { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+
+.form-submit {
+  width: 100%; padding: 14px; background: var(--gradient); color: #0A0A0A; border: none;
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;
+  cursor: pointer; transition: opacity 0.2s, transform 0.2s; border-radius: var(--radius-sm);
+  -webkit-appearance: none; appearance: none;
+}
+.form-submit:hover { opacity: 0.9; transform: scale(1.01); }
+
+/* SUCCESS */
+.booking-success { display: none; text-align: center; padding: 32px 16px; }
+.success-icon {
+  width: 56px; height: 56px; border-radius: 50%; background: var(--gradient);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+}
+.success-icon svg { width: 24px; height: 24px; stroke: #0A0A0A; fill: none; stroke-width: 2.5; }
+.success-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+.success-detail { color: var(--text-secondary); line-height: 1.7; font-size: 0.88rem; }
+
+/* FOOTER */
+footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px solid var(--border); }
+.footer-inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
+.footer-logo { height: 30px; width: auto; margin-bottom: 10px; }
+.footer-desc { color: var(--text-tertiary); font-size: 0.82rem; line-height: 1.7; max-width: 280px; }
+.footer-heading { color: var(--text-secondary); font-size: 0.68rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { color: var(--text-tertiary); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+.footer-links a svg { width: 14px; height: 14px; stroke: var(--text-tertiary); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+.footer-links a:hover { color: var(--text); }
+.footer-links a:hover svg { stroke: var(--text); }
+.footer-bottom { max-width: 1120px; margin: 32px auto 0; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-copy { color: var(--text-tertiary); font-size: 0.78rem; }
+.footer-credits { color: var(--text-tertiary); font-size: 0.78rem; }
+.ig-btn {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--gradient);
+  color: #0A0A0A; padding: 6px 14px; border-radius: 20px; text-decoration: none;
+  font-size: 0.78rem; font-weight: 600; transition: opacity 0.2s, transform 0.2s;
+}
+.ig-btn:hover { opacity: 0.9; transform: scale(1.03); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--surface); color: var(--text); padding: 12px 24px; border-radius: 24px;
+  font-size: 0.85rem; z-index: 999; opacity: 0; transition: all 0.35s;
+  box-shadow: var(--shadow-lg); font-weight: 500; border: 1px solid var(--border);
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .hero-text { align-items: center; }
+  .hero p { max-width: 100%; }
+  .hero-buttons { justify-content: center; }
+  .hero-logo { order: -1; max-height: 280px; }
+  nav { height: 56px; }
+  .nav-links { gap: 16px; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .schedule-wrap { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  .footer-desc { max-width: 100%; }
+  .booking-form { padding: 24px; }
+}
+@media (max-width: 600px) {
+  section { padding: 48px 16px; }
+  .hero { min-height: auto; padding: 80px 16px 48px; }
+  .hero-logo { max-height: 200px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .barbers-grid { grid-template-columns: 1fr; }
+  .barber-img { height: 220px; }
+  .form-row { grid-template-columns: 1fr; }
+  .time-grid { grid-template-columns: repeat(3, 1fr); }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .nav-links a:not(.nav-cta) { display: none; }
+  .nav-links { gap: 8px; }
+  .booking-form { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND DECORATIVE -->
+<div class="bg-deco">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="orb orb-5"></div>
+  <div class="circle-ring circle-ring-1"></div>
+  <div class="circle-ring circle-ring-2"></div>
+  <div class="circle-ring circle-ring-3"></div>
+  <div class="circle-dot circle-dot-1"></div>
+  <div class="circle-dot circle-dot-2"></div>
+  <div class="circle-dot circle-dot-3"></div>
+  <div class="circle-dot circle-dot-4"></div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <img class="nav-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#barberos">Barberos</a></li>
+      <li><a href="#horarios">Horarios</a></li>
+      <li><a href="#citas" class="nav-cta">Reservar cita</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>El arte del<br><span>buen corte</span></h1>
+      <p>Tradición y estilo contemporáneo en el corazón de Elda. Dos barberos, una filosofía: el detalle lo es todo.</p>
+      <div class="hero-buttons">
+        <a href="#citas" class="hero-btn-primary">Reservar ahora</a>
+        <a href="#barberos" class="hero-btn-outline">Conócenos</a>
+      </div>
+    </div>
+    <img class="hero-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="servicios">
+  <div class="section-inner">
+    <div class="section-label">Servicios</div>
+    <h2 class="section-title">Lo que hacemos</h2>
+    <p class="section-desc">Cada servicio está pensado para ofrecerte una experiencia única de cuidado personal.</p>
+    <div class="services-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- BARBERS -->
+<section id="barberos">
+  <div class="section-inner">
+    <div class="section-label">El equipo</div>
+    <h2 class="section-title">Nuestros barberos</h2>
+    <p class="section-desc">Dos profesionales, dos estilos, un mismo compromiso con la calidad.</p>
+    <div class="barbers-grid">
+      <div class="barber-card">
+        <img class="barber-img" src="https://i.postimg.cc/QNgF3jWm/c-1-0.jpg" alt="Carlos" loading="lazy">
+        <div class="barber-body">
+          <div class="barber-name">Carlos</div>
+          <div class="barber-role">Barbero — Con Curso</div>
+          <p class="barber-bio">Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.</p>
+          <div class="barber-tags">
+            <span class="barber-tag">Corte clásico</span>
+            <span class="barber-tag">Degradado</span>
+            <span class="barber-tag">Barba</span>
+          </div>
+          <div class="barber-prices" id="prices-carlos"></div>
+        </div>
+      </div>
+      <div class="barber-card">
+        <img class="barber-img" src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=700&q=80" alt="Iker" loading="lazy">
+        <div class="barber-body">
+          <div class="barber-name">Iker</div>
+          <div class="barber-role">Barbero — Estilo Completo</div>
+          <p class="barber-bio">Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.</p>
+          <div class="barber-tags">
+            <span class="barber-tag">Corte completo</span>
+            <span class="barber-tag">Cejas</span>
+            <span class="barber-tag">VIP</span>
+          </div>
+          <div class="barber-prices" id="prices-iker"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="galeria" class="gallery-section">
+  <div class="section-inner">
+    <div class="section-label">Galería</div>
+    <h2 class="section-title">Cortes realizados</h2>
+    <p class="section-desc">Cortes realizados por Carlos. Desliza para ver más.</p>
+    <div class="gallery-carousel-wrap">
+      <div class="gallery-track" id="galleryTrack"></div>
+      <div class="gallery-dots" id="galleryDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="horarios">
+  <div class="section-inner">
+    <div class="section-label">Horarios</div>
+    <h2 class="section-title">Cuándo estamos</h2>
+    <p class="section-desc">Trabajamos con cita previa para garantizarte la mejor atención.</p>
+    <div class="schedule-wrap">
+      <table class="schedule-table">
+        <thead><tr><th>Día</th><th>Carlos</th><th>Iker</th><th>Estado</th></tr></thead>
+        <tbody id="scheduleTable"></tbody>
+      </table>
+      <div class="schedule-note">
+        <div style="font-size:0.72rem;color:var(--accent-2);font-weight:600;letter-spacing:0.5px">Carlos</div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <a class="contact-link" href="tel:688790018" id="contactPhoneCarlos">688790018</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a class="contact-link" href="mailto:Carlosalonsan2008@gmail.com" id="contactEmailCarlos">Carlosalonsan2008@gmail.com</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <a class="contact-link" href="https://maps.google.com/?q=Calle+Salamanca+número+53+Elda" target="_blank" id="contactAddressCarlos">Calle Salamanca número 53</a>
+        </div>
+        <div style="margin:12px 0 4px;font-size:0.72rem;color:var(--accent-2);font-weight:600;letter-spacing:0.5px">Iker</div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <a class="contact-link" href="tel:613022267" id="contactPhoneIker">613022267</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a class="contact-link" href="mailto:s4nchezzakatyrkk@gmail.com" id="contactEmailIker">s4nchezzakatyrkk@gmail.com</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <a class="contact-link" href="https://maps.google.com/?q=Calle+Salamanca+número+45+Elda" target="_blank" id="contactAddressIker">Calle Salamanca número 45</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="citas">
+  <div class="section-inner">
+    <div class="section-label">Reservas</div>
+    <h2 class="section-title">Pide tu cita</h2>
+    <p class="section-desc">Reserva online en menos de un minuto. Sin esperas, sin llamadas.</p>
+    <div class="booking-form" id="bookingFormContainer">
+      <div id="bookingFormInner">
+        <div class="form-title">Nueva reserva</div>
+
+        <span class="form-label">1 — Elige tu barbero</span>
+        <div class="barber-selector">
+          <div class="barber-option" onclick="selectBarber('carlos')" id="opt-carlos">
+            <div class="barber-opt-name">Carlos</div>
+          </div>
+          <div class="barber-option" onclick="selectBarber('iker')" id="opt-iker">
+            <div class="barber-opt-name">Iker</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">2 — Servicio</label>
+          <select class="form-select" id="serviceSelect" onchange="updatePrice()">
+            <option value="">Selecciona un servicio…</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">3 — Fecha y hora</label>
+          <button class="dt-picker-btn" id="dtPickerBtn" onclick="toggleDtPicker()" type="button">
+            <span class="dt-cal-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+            <span class="dt-label" id="dtLabel">Seleccionar día y hora</span>
+            <span class="dt-value" id="dtValue"></span>
+            <span class="dt-arrow">▼</span>
+          </button>
+          <input type="hidden" id="dateInput" />
+          <div class="dt-picker-body" id="dtPickerBody">
+            <div class="cal-header">
+              <button class="cal-nav" onclick="changeMonth(-1)" type="button">‹</button>
+              <span class="cal-month" id="calMonthLabel"></span>
+              <button class="cal-nav" onclick="changeMonth(1)" type="button">›</button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div id="timeSlotsWrapper">
+              <div class="time-grid" id="timeGrid">
+                <div style="color:var(--text-tertiary);font-size:0.82rem;grid-column:1/-1;text-align:center;padding:12px">Selecciona barbero, servicio y día primero.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-input" id="nameInput" placeholder="Tu nombre" autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <input type="tel" class="form-input" id="phoneInput" placeholder="688790018" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:12px">
+          <label class="form-label">Notas (opcional)</label>
+          <textarea class="form-textarea" id="notesInput" rows="2" placeholder="Algo que debamos saber…"></textarea>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <span style="font-size:0.78rem;color:var(--text-tertiary)">Precio estimado:</span>
+          <span style="font-size:1.1rem;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="priceDisplay">—</span>
+        </div>
+
+        <button class="form-submit" onclick="submitBooking()" type="button">Confirmar reserva</button>
+      </div>
+      <div class="booking-success" id="bookingSuccess">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
+        </div>
+        <div class="success-title">¡Reserva confirmada!</div>
+        <p class="success-detail" id="successDetail"></p>
+        <button class="form-submit" style="margin-top:16px" onclick="resetForm()" type="button">Nueva reserva</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <img class="footer-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+      <p class="footer-desc">Barbería de referencia en Elda. Tradición, precisión y estilo en cada corte.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Navegación</div>
+      <ul class="footer-links">
+        <li><a href="#servicios">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          Servicios
+        </a></li>
+        <li><a href="#barberos">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          El equipo
+        </a></li>
+        <li><a href="#horarios">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          Horarios
+        </a></li>
+        <li><a href="#citas">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          Reservar cita
+        </a></li>
+      </ul>
+    </div>
+
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 CISA. Todos los derechos reservados.</span>
+    <span class="footer-credits">Desarrollado por <a href="https://instagram.com/diegooaacosta" target="_blank" rel="noopener" class="ig-btn">Diego Acosta</a></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'barberco_data';
+function getDefaultData() {
+  return {
+    services: [
+      { id: 1, name: 'Corte de pelo', desc: 'Corte clásico o moderno adaptado a tu estilo', duration: '30 min', priceCarlos: 5, priceIker: 8, icon: '💇' },
+      { id: 2, name: 'Arreglo de barba', desc: 'Perfilado y definición de barba con navaja o máquina', duration: '20 min', priceCarlos: 3, priceIker: 0, icon: '🪒' },
+      { id: 3, name: 'Corte + Barba', desc: 'Pack completo: corte y arreglo de barba', duration: '50 min', priceCarlos: 7, priceIker: 0, icon: '💈' },
+      { id: 4, name: 'Cejas', desc: 'Perfilado y definición de cejas', duration: '10 min', priceCarlos: 0, priceIker: 2.5, icon: '🪒' },
+      { id: 5, name: 'Corte + Cejas', desc: 'Corte completo y perfilado de cejas', duration: '40 min', priceCarlos: 0, priceIker: 9.5, icon: '✂️' },
+      { id: 6, name: 'Servicio VIP', desc: 'Mascarilla facial, masaje craneal y serum capilar', duration: '30 min', priceCarlos: 0, priceIker: 12, icon: '⭐' },
+    ],
+    schedule: [
+      { day: 'Lunes', carlos: '—', iker: '15:30–20:30', open: true },
+      { day: 'Martes', carlos: '10:00–13:00 / 16:00–19:45', iker: '15:30–20:30', open: true },
+      { day: 'Miércoles', carlos: '10:00–13:00 / 16:00–19:45', iker: '15:30–20:30', open: true },
+      { day: 'Jueves', carlos: '10:00–13:00 / 16:00–19:45', iker: '15:30–20:30', open: true },
+      { day: 'Viernes', carlos: '10:00–13:00 / 16:00–19:45', iker: '13:30–20:30', open: true },
+      { day: 'Sábado', carlos: '10:00–13:00 / 16:00–19:45', iker: '12:00–18:00', open: true },
+      { day: 'Domingo', carlos: '—', iker: '—', open: false },
+    ],
+    appointments: [],
+  };
+}
+function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
+
+const clockSvg = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>';
+let selectedBarber = null;
+let selectedTime = null;
+let appData = getData();
+let calYear, calMonth;
+let dtOpen = false;
+
+function renderServices() {
+  const grid = document.getElementById('servicesGrid');
+  grid.innerHTML = appData.services.map(s => `
+    <div class="service-card">
+      <div class="service-icon">${s.icon}</div>
+      <div class="service-name">${s.name}</div>
+      <p class="service-desc">${s.desc}</p>
+      <div class="service-meta">
+        <span class="service-duration">${clockSvg} ${s.duration}</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderSchedule() {
+  const tbody = document.getElementById('scheduleTable');
+  const today = new Date().toLocaleDateString('es-ES', { weekday: 'long' });
+  tbody.innerHTML = appData.schedule.map(row => {
+    const isToday = row.day.toLowerCase() === today;
+    return `<tr class="${isToday ? 'today-row' : ''}">
+      <td class="day-name">${row.day}${isToday ? '<br><span style="font-size:0.65rem;color:var(--accent-2)">hoy</span>' : ''}</td>
+      <td class="hours-cell">${row.open ? row.carlos : '<span class="closed">Cerrado</span>'}</td>
+      <td class="hours-cell">${row.open ? row.iker : '<span class="closed">Cerrado</span>'}</td>
+      <td>${row.open ? '<span class="badge-schedule badge-open">Abierto</span>' : '<span class="badge-schedule badge-closed">Cerrado</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderServiceSelect() {
+  const sel = document.getElementById('serviceSelect');
+  const filtered = selectedBarber
+    ? appData.services.filter(s => (selectedBarber === 'carlos' ? s.priceCarlos : s.priceIker) > 0)
+    : appData.services;
+  sel.innerHTML = '<option value="">Selecciona un servicio…</option>' +
+    filtered.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+}
+
+function selectBarber(barber) {
+  selectedBarber = barber;
+  document.getElementById('opt-carlos').classList.toggle('selected', barber === 'carlos');
+  document.getElementById('opt-iker').classList.toggle('selected', barber === 'iker');
+  document.getElementById('serviceSelect').value = '';
+  renderServiceSelect();
+  updatePrice();
+  updateDtLabel();
+  if (document.getElementById('dateInput').value) generateSlots();
+}
+
+function updatePrice() {
+  const sid = parseInt(document.getElementById('serviceSelect').value);
+  const svc = appData.services.find(s => s.id === sid);
+  const el = document.getElementById('priceDisplay');
+  if (svc && selectedBarber) {
+    el.textContent = (selectedBarber === 'carlos' ? svc.priceCarlos : svc.priceIker) + '€';
+  } else { el.textContent = '—'; }
+}
+
+function toggleDtPicker() {
+  dtOpen = !dtOpen;
+  document.getElementById('dtPickerBody').classList.toggle('open', dtOpen);
+  document.getElementById('dtPickerBtn').classList.toggle('open', dtOpen);
+  if (dtOpen) renderCalendar();
+}
+
+function updateDtLabel() {
+  const date = document.getElementById('dateInput').value;
+  const label = document.getElementById('dtLabel');
+  const value = document.getElementById('dtValue');
+  if (date && selectedTime) {
+    const parts = date.split('-');
+    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    label.textContent = `${parseInt(parts[2])} ${months[parseInt(parts[1])-1]}`;
+    value.textContent = selectedTime;
+  } else if (date) {
+    const parts = date.split('-');
+    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    label.textContent = `${parseInt(parts[2])} ${months[parseInt(parts[1])-1]}`;
+    value.textContent = 'falta hora';
+  } else {
+    label.textContent = 'Seleccionar día y hora';
+    value.textContent = '';
+  }
+}
+
+// ---- CALENDAR ----
+function renderCalendar() {
+  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('calMonthLabel').textContent = `${months[calMonth]} ${calYear}`;
+  const grid = document.getElementById('calGrid');
+  const today = new Date().toISOString().split('T')[0];
+  const selected = document.getElementById('dateInput').value;
+  const days = ['Lu','Ma','Mi','Ju','Vi','Sá','Do'];
+  let html = days.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  const first = new Date(calYear, calMonth, 1);
+  let startDow = (first.getDay() + 6) % 7;
+  const total = new Date(calYear, calMonth + 1, 0).getDate();
+  const prevTotal = new Date(calYear, calMonth, 0).getDate();
+  for (let i = 0; i < startDow; i++) {
+    html += `<div class="cal-day other-month">${prevTotal - startDow + 1 + i}</div>`;
+  }
+  for (let d = 1; d <= total; d++) {
+    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isPast = ds < today;
+    const isSel = ds === selected;
+    const cls = [ds === today ? 'today' : '', isSel ? 'selected' : '', isPast ? 'past' : ''].filter(Boolean).join(' ');
+    html += `<div class="cal-day ${cls}" data-date="${ds}" onclick="${isPast ? '' : `selectDate('${ds}')`}">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function changeMonth(d) {
+  calMonth += d;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function selectDate(dateStr) {
+  document.getElementById('dateInput').value = dateStr;
+  document.querySelectorAll('#calGrid .cal-day').forEach(el => el.classList.remove('selected'));
+  const el = document.querySelector(`#calGrid .cal-day[data-date="${dateStr}"]`);
+  if (el) el.classList.add('selected');
+  selectedTime = null;
+  updateDtLabel();
+  generateSlots();
+}
+
+// ---- TIME SLOTS ----
+function generateSlots() {
+  const grid = document.getElementById('timeGrid');
+  const date = document.getElementById('dateInput').value;
+  const dayName = new Date(date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' });
+  const schedRow = appData.schedule.find(r => r.day.toLowerCase() === dayName);
+  if (schedRow && !schedRow.open) {
+    grid.innerHTML = '<div style="color:#FF453A;font-size:0.82rem;grid-column:1/-1;text-align:center;padding:12px">Cerrado este día</div>';
+    return;
+  }
+  const booked = appData.appointments.filter(a => a.barber === selectedBarber && a.date === date).map(a => a.time);
+  const slots = ['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30'];
+  grid.innerHTML = `<div style="grid-column:1/-1;font-size:0.72rem;color:var(--text-tertiary);margin-bottom:4px">${selectedBarber ? selectedBarber.charAt(0).toUpperCase()+selectedBarber.slice(1) : '—'}</div>`
+    + slots.map(t => {
+    const occ = booked.includes(t);
+    return `<div class="time-slot ${occ ? 'occupied' : ''}" onclick="${occ ? '' : `selectTime('${t}')`}" id="slot-${t.replace(':','-')}">${t}</div>`;
+  }).join('');
+}
+
+function selectTime(t) {
+  selectedTime = t;
+  document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
+  document.getElementById('slot-' + t.replace(':', '-'))?.classList.add('selected');
+  updateDtLabel();
+}
+
+// ---- SUBMIT ----
+function submitBooking() {
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const sid = parseInt(document.getElementById('serviceSelect').value);
+  const date = document.getElementById('dateInput').value;
+  const notes = document.getElementById('notesInput').value.trim();
+  if (!selectedBarber) { showToast('Elige un barbero'); return; }
+  if (!sid) { showToast('Selecciona un servicio'); return; }
+  if (!date) { showToast('Elige un día en el calendario'); return; }
+  if (!selectedTime) { showToast('Selecciona una hora'); return; }
+  if (!name) { showToast('Introduce tu nombre'); return; }
+
+  const svc = appData.services.find(s => s.id === sid);
+  const price = selectedBarber === 'carlos' ? svc.priceCarlos : svc.priceIker;
+  const appt = {
+    id: Date.now(), barber: selectedBarber, service: svc.name,
+    date, time: selectedTime, name, phone, notes, price,
+    createdAt: new Date().toISOString(), status: 'confirmed'
+  };
+  appData.appointments.push(appt);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+
+  document.getElementById('bookingFormInner').style.display = 'none';
+  const succ = document.getElementById('bookingSuccess');
+  succ.style.display = 'block';
+  const parts = date.split('-');
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const fechaStr = `${parseInt(parts[2])} ${months[parseInt(parts[1])-1]} ${parts[0]}`;
+  document.getElementById('successDetail').innerHTML = `
+    <strong>${name}</strong>, tu cita ha sido reservada.<br><br>
+    ${fechaStr} a las ${selectedTime}<br>
+    ${selectedBarber.charAt(0).toUpperCase()+selectedBarber.slice(1)} — ${svc.name}<br>
+    ${price}€<br><br>
+    Te esperamos en <span id="successAddress">Calle Salamanca número 53</span>.
+  `;
+}
+
+function resetForm() {
+  appData = getData();
+  selectedBarber = null; selectedTime = null; dtOpen = false;
+  document.getElementById('bookingFormInner').style.display = 'block';
+  document.getElementById('bookingSuccess').style.display = 'none';
+  document.getElementById('opt-carlos').classList.remove('selected');
+  document.getElementById('opt-iker').classList.remove('selected');
+  document.getElementById('serviceSelect').value = '';
+  document.getElementById('dateInput').value = '';
+  document.getElementById('priceDisplay').textContent = '—';
+  document.getElementById('nameInput').value = '';
+  document.getElementById('phoneInput').value = '';
+  document.getElementById('notesInput').value = '';
+  document.getElementById('dtPickerBody').classList.remove('open');
+  document.getElementById('dtPickerBtn').classList.remove('open');
+  document.getElementById('dtLabel').textContent = 'Seleccionar día y hora';
+  document.getElementById('dtValue').textContent = '';
+  document.getElementById('timeGrid').innerHTML = '<div style="color:var(--text-tertiary);font-size:0.82rem;grid-column:1/-1;text-align:center;padding:12px">Selecciona barbero, servicio y día primero.</div>';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ====== GALLERY ======
+const galleryMedia = [
+  { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg' },
+  { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg' },
+  { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg' },
+];
+let galleryIndex = 0;
+
+function renderGallery() {
+  const track = document.getElementById('galleryTrack');
+  const prev = getPrevIndex(galleryIndex);
+  const next = getNextIndex(galleryIndex);
+  const slides = [
+    { i: prev, cls: 'side side-left', arrow: 'galleryPrev()', arrowDir: '‹', arrowCls: 'gallery-arrow-left' },
+    { i: galleryIndex, cls: 'active', arrow: null, arrowDir: null, arrowCls: null },
+    { i: next, cls: 'side side-right', arrow: 'galleryNext()', arrowDir: '›', arrowCls: 'gallery-arrow-right' },
+  ];
+  track.innerHTML = slides.map(s => {
+    const m = galleryMedia[s.i];
+    const tag = m.type === 'video' ? 'video' : 'img';
+    const srcAttr = 'src';
+    const extra = m.type === 'video' ? ' muted loop playsinline' : ' loading="lazy"';
+    const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
+    return `<div class="gallery-slide ${s.cls}">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}><div class="gallery-badge">Carlos</div></div>`;
+  }).join('');
+  renderDots();
+}
+function getPrevIndex(i) { return i === 0 ? galleryMedia.length - 1 : i - 1; }
+function getNextIndex(i) { return i === galleryMedia.length - 1 ? 0 : i + 1; }
+function goToSlide(i) { galleryIndex = i; renderGallery(); }
+function galleryPrev() { goToSlide(getPrevIndex(galleryIndex)); }
+function galleryNext() { goToSlide(getNextIndex(galleryIndex)); }
+function renderDots() {
+  const dots = document.getElementById('galleryDots');
+  dots.innerHTML = galleryMedia.map((_, i) =>
+    `<button class="gallery-dot ${i === galleryIndex ? 'active' : ''}" onclick="goToSlide(${i})"></button>`
+  ).join('');
+}
+// Keyboard + touch support
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowLeft') galleryPrev();
+  if (e.key === 'ArrowRight') galleryNext();
+});
+
+const now = new Date();
+calYear = now.getFullYear();
+calMonth = now.getMonth();
+renderServices();
+renderSchedule();
+renderServiceSelect();
+renderPrices();
+renderGallery();
+function renderPrices() {
+  ['carlos','iker'].forEach(b => {
+    const el = document.getElementById('prices-' + b);
+    const color = b === 'carlos' ? '#D4708A' : '#A87DB8';
+    el.innerHTML = appData.services
+      .filter(s => (b === 'carlos' ? s.priceCarlos : s.priceIker) > 0)
+      .map(s =>
+        `<div class="barber-price-row"><span class="barber-price-name">${s.icon} ${s.name}</span><span class="barber-price-val" style="color:${color}">${b === 'carlos' ? s.priceCarlos : s.priceIker}€</span></div>`
+      ).join('');
+  });
+}
+</script>
+<script>
+// Apply admin configuration (colors + contact info)
+(function() {
+  try {
+    var auth = JSON.parse(localStorage.getItem('cisa_auth'));
+    if (auth) {
+      // Apply color scheme
+      if (auth.scheme) {
+        var schemeVars = {
+          cisa: { '--accent-1':'#F2B5C8','--accent-2':'#C9A4D4' },
+          midnight: { '--accent-1':'#5B8DEF','--accent-2':'#8B7EC8' },
+          emerald: { '--accent-1':'#6FCF97','--accent-2':'#5BC0BE' },
+          royal: { '--accent-1':'#C084FC','--accent-2':'#F472B6' },
+          carbon: { '--accent-1':'#58A6FF','--accent-2':'#8B949E' },
+          terra: { '--accent-1':'#E89F6C','--accent-2':'#C89B8B' },
+        };
+        var vars = schemeVars[auth.scheme];
+        if (vars) {
+          var root = document.documentElement.style;
+          root.setProperty('--accent-1', vars['--accent-1']);
+          root.setProperty('--accent-2', vars['--accent-2']);
+        }
+      }
+      // Apply contact info
+      if (auth.addressCarlos) {
+        var el = document.getElementById('contactAddressCarlos'); if (el) { el.textContent = auth.addressCarlos; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressCarlos + ' Elda'); }
+      }
+      if (auth.addressIker) {
+        var el = document.getElementById('contactAddressIker'); if (el) { el.textContent = auth.addressIker; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressIker + ' Elda'); }
+      }
+      if (auth.phoneCarlos) {
+        var el = document.getElementById('contactPhoneCarlos'); if (el) { el.textContent = auth.phoneCarlos; el.href = 'tel:' + auth.phoneCarlos; }
+      }
+      if (auth.phoneIker) {
+        var el = document.getElementById('contactPhoneIker'); if (el) { el.textContent = auth.phoneIker; el.href = 'tel:' + auth.phoneIker; }
+      }
+      if (auth.emailCarlos) {
+        var el = document.getElementById('contactEmailCarlos'); if (el) { el.textContent = auth.emailCarlos; el.href = 'mailto:' + auth.emailCarlos; }
+      }
+      if (auth.emailIker) {
+        var el = document.getElementById('contactEmailIker'); if (el) { el.textContent = auth.emailIker; el.href = 'mailto:' + auth.emailIker; }
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

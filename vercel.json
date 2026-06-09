@@ -1,0 +1,11 @@
+{
+  "name": "cisa-barberia",
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "framework": null,
+  "rewrites": [
+    { "source": "/", "destination": "/barberia.html" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}
