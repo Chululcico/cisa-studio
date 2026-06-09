@@ -211,8 +211,8 @@ section { padding: 80px 24px; }
   position: absolute; bottom: 8px; right: 8px; z-index: 4;
   font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;
   padding: 3px 10px; border-radius: 20px;
-  background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
-  color: var(--accent-1); border: 1px solid color-mix(in srgb, var(--accent-1) 30%, transparent);
+  background: rgba(10,10,10,0.75); backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 .gallery-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
 .gallery-dot {
@@ -440,7 +440,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   <div class="hero-inner">
     <div class="hero-text">
       <h1>El arte del<br><span>buen corte</span></h1>
-      <p>Tradición y estilo contemporáneo en el corazón de Elda. Dos barberos, una filosofía: el detalle lo es todo.</p>
+      <p>Elda. Dos barberos, una filosofía: el detalle lo es todo.</p>
       <div class="hero-buttons">
         <a href="#citas" class="hero-btn-primary">Reservar ahora</a>
         <a href="#barberos" class="hero-btn-outline">Conócenos</a>
@@ -504,7 +504,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   <div class="section-inner">
     <div class="section-label">Galería</div>
     <h2 class="section-title">Cortes realizados</h2>
-    <p class="section-desc">Cortes realizados por Carlos. Desliza para ver más.</p>
+    <p class="section-desc">Trabajos realizados por Carlos e Iker. Desliza para ver más.</p>
     <div class="gallery-carousel-wrap">
       <div class="gallery-track" id="galleryTrack"></div>
       <div class="gallery-dots" id="galleryDots"></div>
@@ -932,9 +932,12 @@ function showToast(msg) {
 
 // ====== GALLERY ======
 const galleryMedia = [
-  { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg' },
-  { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg' },
-  { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg' },
+  { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg', barber:'carlos' },
+  { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
+  { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
+  { type:'video', src:'https://files.catbox.moe/j2hy0i.MOV', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/44t9gb.MOV', barber:'iker' },
+  { type:'video', src:'https://files.catbox.moe/kl5b1h.MOV', barber:'iker' },
 ];
 let galleryIndex = 0;
 
@@ -951,9 +954,11 @@ function renderGallery() {
     const m = galleryMedia[s.i];
     const tag = m.type === 'video' ? 'video' : 'img';
     const srcAttr = 'src';
-    const extra = m.type === 'video' ? ' muted loop playsinline' : ' loading="lazy"';
+    const extra = m.type === 'video' ? ' muted autoplay loop playsinline webkit-playsinline' : ' loading="lazy"';
     const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
-    return `<div class="gallery-slide ${s.cls}">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}><div class="gallery-badge">Carlos</div></div>`;
+    const barberLabel = m.barber === 'iker' ? 'Iker' : 'Carlos';
+    const badgeColor = m.barber === 'iker' ? 'var(--accent-2)' : 'var(--accent-1)';
+    return `<div class="gallery-slide ${s.cls}">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}><div class="gallery-badge" style="color:${badgeColor}">${barberLabel}</div></div>`;
   }).join('');
   renderDots();
 }
