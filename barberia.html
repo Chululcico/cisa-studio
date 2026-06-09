@@ -212,7 +212,7 @@ section { padding: 80px 24px; }
   font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px;
   padding: 3px 10px; border-radius: 20px;
   background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
-  color: #D4708A; border: 1px solid rgba(212,112,138,0.3);
+  color: var(--accent-1); border: 1px solid color-mix(in srgb, var(--accent-1) 30%, transparent);
 }
 .gallery-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
 .gallery-dot {
@@ -392,6 +392,8 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   .hero { min-height: auto; padding: 80px 16px 48px; }
   .hero-logo { max-height: 200px; }
   .services-grid { grid-template-columns: 1fr; }
+  .service-card { text-align: center; align-items: center; }
+  .service-meta { justify-content: center; }
   .barbers-grid { grid-template-columns: 1fr; }
   .barber-img { height: 220px; }
   .form-row { grid-template-columns: 1fr; }
@@ -983,7 +985,7 @@ renderGallery();
 function renderPrices() {
   ['carlos','iker'].forEach(b => {
     const el = document.getElementById('prices-' + b);
-    const color = b === 'carlos' ? '#D4708A' : '#A87DB8';
+    const color = b === 'carlos' ? 'var(--accent-1)' : 'var(--accent-2)';
     el.innerHTML = appData.services
       .filter(s => (b === 'carlos' ? s.priceCarlos : s.priceIker) > 0)
       .map(s =>
