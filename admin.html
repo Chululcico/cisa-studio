@@ -948,7 +948,7 @@ function resetData() {
 
 function svcIcon(id, size) {
   const names = {1:'scissors', 2:'sparkles', 3:'scissors', 5:'scissors', 6:'star'};
-  if (id === 4) return `<img src="https://i.postimg.cc/W44QKJ1D/Chat-GPT-Image-10-jun-2026-21-29-29.png" alt="" style="width:${Math.round((size||18)*1.5)}px;height:auto;display:block">`;
+  if (id === 4) return `<svg width="${size||18}" height="${size||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8c3-5 9-5 12 0l1 1c3 3 3 7 0 10"/></svg>`;
   return `<i data-lucide="${names[id]||'scissors'}" width="${size||18}" height="${size||18}"></i>`;
 }
 
@@ -1290,6 +1290,18 @@ firebase.auth().onAuthStateChanged(user => {
       loadAppData(snap);
       document.getElementById('loginError').classList.remove('show');
       initAdmin();
+    });
+    db.ref('cisa/appointments').on('child_added', snap => {
+      const a = snap.val();
+      if (a && !appData.appointments.find(x => x.id === a.id)) {
+        appData.appointments.push(a);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        const active = document.querySelector('.page.active');
+        if (active && (active.id === 'page-citas' || active.id === 'page-dashboard')) {
+          if (active.id === 'page-citas') renderAppointments();
+          else renderDashboard();
+        }
+      }
     });
   } else {
     fbReady = false;
