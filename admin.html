@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CISA · Panel de Administración</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style id="dynamic-styles">
 :root {
   --bg: #0A0A0A;
@@ -295,18 +296,18 @@ select option { background: var(--surface); color: var(--text); }
   </div>
   <nav class="sidebar-nav">
     <div class="nav-section">Principal</div>
-    <div class="nav-item active" onclick="showPage('dashboard', this)"><span class="nav-icon">◆</span><span>Dashboard</span></div>
-    <div class="nav-item" onclick="showPage('citas', this)"><span class="nav-icon">◇</span><span>Citas</span></div>
+    <div class="nav-item active" onclick="showPage('dashboard', this)"><span class="nav-icon"><i data-lucide="layout-dashboard" width="16" height="16"></i></span><span>Dashboard</span></div>
+    <div class="nav-item" onclick="showPage('citas', this)"><span class="nav-icon"><i data-lucide="calendar" width="16" height="16"></i></span><span>Citas</span></div>
     <div class="nav-section">Gestión</div>
-    <div class="nav-item" onclick="showPage('barberos', this)"><span class="nav-icon">○</span><span>Barberos</span></div>
-    <div class="nav-item" onclick="showPage('servicios', this)"><span class="nav-icon">△</span><span>Servicios</span></div>
-    <div class="nav-item" onclick="showPage('horarios', this)"><span class="nav-icon">□</span><span>Horarios</span></div>
+    <div class="nav-item" onclick="showPage('barberos', this)"><span class="nav-icon"><i data-lucide="users" width="16" height="16"></i></span><span>Barberos</span></div>
+    <div class="nav-item" onclick="showPage('servicios', this)"><span class="nav-icon"><i data-lucide="scissors" width="16" height="16"></i></span><span>Servicios</span></div>
+    <div class="nav-item" onclick="showPage('horarios', this)"><span class="nav-icon"><i data-lucide="clock" width="16" height="16"></i></span><span>Horarios</span></div>
     <div class="nav-section">Sistema</div>
-    <div class="nav-item" onclick="showPage('configuracion', this)"><span class="nav-icon">⚙</span><span>Configuración</span></div>
+    <div class="nav-item" onclick="showPage('configuracion', this)"><span class="nav-icon"><i data-lucide="settings" width="16" height="16"></i></span><span>Configuración</span></div>
   </nav>
   <div class="sidebar-footer">
     <div>© 2026 CISA</div>
-    <div style="margin-top:4px"><a href="barberia.html" target="_blank">Ver web →</a></div>
+    <div style="margin-top:4px"><a href="barberia.html" target="_blank">Ver web <i data-lucide="arrow-right" width="12" height="12"></i></a></div>
   </div>
 </aside>
 
@@ -353,7 +354,7 @@ select option { background: var(--surface); color: var(--text); }
     <!-- CITAS -->
     <div class="page" id="page-citas">
       <div class="filter-bar">
-        <input type="text" id="searchAppt" placeholder="🔍 Buscar por nombre…" oninput="renderAppointments()" style="min-width:160px">
+        <div style="position:relative;min-width:160px"><i data-lucide="search" width="14" height="14" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none"></i><input type="text" id="searchAppt" placeholder="Buscar por nombre…" oninput="renderAppointments()" style="width:100%;padding-left:30px"></div>
         <select id="filterBarber" onchange="renderAppointments()">
           <option value="">Todos los barberos</option>
           <option value="carlos">Carlos</option>
@@ -463,31 +464,31 @@ select option { background: var(--surface); color: var(--text); }
         <div class="settings-section-title" style="margin-top:16px">Contacto por barbero</div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">📍 Carlos</label>
+            <label class="form-label"><i data-lucide="map-pin" width="14" height="14" style="vertical-align:middle"></i> Carlos</label>
             <input class="form-input" id="cfgAddressCarlos" placeholder="Calle Salamanca número 53">
           </div>
           <div class="form-group">
-            <label class="form-label">📍 Iker</label>
+            <label class="form-label"><i data-lucide="map-pin" width="14" height="14" style="vertical-align:middle"></i> Iker</label>
             <input class="form-input" id="cfgAddressIker" placeholder="Calle Salamanca número 45">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">📞 Carlos</label>
+            <label class="form-label"><i data-lucide="phone" width="14" height="14" style="vertical-align:middle"></i> Carlos</label>
             <input class="form-input" id="cfgPhoneCarlos" placeholder="688790018">
           </div>
           <div class="form-group">
-            <label class="form-label">✉️ Carlos</label>
+            <label class="form-label"><i data-lucide="mail" width="14" height="14" style="vertical-align:middle"></i> Carlos</label>
             <input class="form-input" id="cfgEmailCarlos" placeholder="carlosalonsan2008@gmail.com">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">📞 Iker</label>
+            <label class="form-label"><i data-lucide="phone" width="14" height="14" style="vertical-align:middle"></i> Iker</label>
             <input class="form-input" id="cfgPhoneIker" placeholder="613022267">
           </div>
           <div class="form-group">
-            <label class="form-label">✉️ Iker</label>
+            <label class="form-label"><i data-lucide="mail" width="14" height="14" style="vertical-align:middle"></i> Iker</label>
             <input class="form-input" id="cfgEmailIker" placeholder="s4nchezzakatyrkk@gmail.com">
           </div>
         </div>
@@ -906,6 +907,12 @@ function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) 
 function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }
 function resetData() { if (!confirm('¿Restablecer todos los datos a valores por defecto? Se perderán las citas guardadas.')) return; localStorage.removeItem(STORAGE_KEY); location.reload(); }
 
+function svcIcon(id, size) {
+  const names = {1:'scissors', 2:'sparkles', 3:'scissors', 5:'scissors', 6:'star'};
+  if (id === 4) return `<img src="https://i.postimg.cc/W44QKJ1D/Chat-GPT-Image-10-jun-2026-21-29-29.png" alt="" style="width:${Math.round((size||18)*1.5)}px;height:auto;display:block">`;
+  return `<i data-lucide="${names[id]||'scissors'}" width="${size||18}" height="${size||18}"></i>`;
+}
+
 let appData = getData();
 let editingSvcId = null;
 let editingApptId = null;
@@ -945,7 +952,7 @@ function renderDashboard() {
 
   const upcoming = appData.appointments.filter(a => a.date >= today && a.status !== 'cancelled').sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time)).slice(0,6);
   const upcomingEl = document.getElementById('upcomingList');
-  if (!upcoming.length) { upcomingEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div>No hay citas próximas</div>'; }
+  if (!upcoming.length) { upcomingEl.innerHTML = '<div class="empty-state"><div class="empty-icon"><i data-lucide="calendar" width="24" height="24"></i></div>No hay citas próximas</div>'; lucide.createIcons(); }
   else upcomingEl.innerHTML = upcoming.map(a => `
     <div class="upcoming-item">
       <div>
@@ -1017,7 +1024,7 @@ function renderAppointments() {
   if (status) list = list.filter(a => a.status === status);
   if (date) list = list.filter(a => a.date === date);
   const tbody = document.getElementById('apptTable');
-  if (!list.length) { tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📅</div>No hay citas</div></td></tr>`; return; }
+  if (!list.length) { tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"><i data-lucide="calendar" width="24" height="24"></i></div>No hay citas</div></td></tr>`; lucide.createIcons(); return; }
   tbody.innerHTML = list.map(a => `
     <tr>
       <td><strong>${a.name}</strong>${a.phone ? `<br><span style="font-size:0.72rem;color:var(--text-tertiary)">${a.phone}</span>` : ''}</td>
@@ -1032,10 +1039,11 @@ function renderAppointments() {
         <option value="cancelled" ${a.status==='cancelled'?'selected':''}>Cancelada</option>
       </select></td>
       <td style="white-space:nowrap">
-        <button class="btn btn-outline btn-sm" onclick="openEditApptModal(${a.id})" style="margin-right:4px">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteAppt(${a.id})">🗑️</button>
+        <button class="btn btn-outline btn-sm" onclick="openEditApptModal(${a.id})" style="margin-right:4px"><i data-lucide="pencil" width="14" height="14"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAppt(${a.id})"><i data-lucide="trash-2" width="14" height="14"></i></button>
       </td>
     </tr>`).join('');
+  lucide.createIcons();
 }
 function changeApptStatus(id, status) { const a = appData.appointments.find(x => x.id === id); if (a) { a.status = status; saveData(); showToast('Estado actualizado'); } }
 function deleteAppt(id) { if (!confirm('¿Eliminar esta cita?')) return; appData.appointments = appData.appointments.filter(a => a.id !== id); saveData(); renderAppointments(); showToast('Cita eliminada'); }
@@ -1072,7 +1080,7 @@ function openEditApptModal(id) {
 }
 function populateApptServiceSelect(selected) {
   const sel = document.getElementById('appt-service');
-  sel.innerHTML = appData.services.map(s => `<option value="${s.name}" ${s.name===selected?'selected':''}>${s.icon} ${s.name}</option>`).join('');
+  sel.innerHTML = appData.services.map(s => `<option value="${s.name}" ${s.name===selected?'selected':''}>${s.name}</option>`).join('');
 }
 function updateApptPrice() {
   const barber = document.getElementById('appt-barber').value;
@@ -1107,15 +1115,16 @@ function renderServicesTable() {
   if (!appData.services.length) { tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">No hay servicios</div></td></tr>`; return; }
   tbody.innerHTML = appData.services.map(s => `
     <tr>
-      <td style="font-size:1.2rem">${s.icon}</td>
+      <td>${svcIcon(s.id, 18)}</td>
       <td><strong>${s.name}</strong></td>
       <td style="color:var(--text-secondary)">${s.duration || '—'}</td>
       <td style="color:var(--text-secondary);font-size:0.8rem;max-width:200px">${s.desc}</td>
       <td style="white-space:nowrap">
-        <button class="btn btn-outline btn-sm" onclick="openServiceModal(${s.id})" style="margin-right:4px">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteService(${s.id})">🗑️</button>
+        <button class="btn btn-outline btn-sm" onclick="openServiceModal(${s.id})" style="margin-right:4px"><i data-lucide="pencil" width="14" height="14"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteService(${s.id})"><i data-lucide="trash-2" width="14" height="14"></i></button>
       </td>
     </tr>`).join('');
+  lucide.createIcons();
 }
 function openServiceModal(id) {
   editingSvcId = id;
@@ -1159,10 +1168,11 @@ function renderPrices() {
       .filter(s => (b === 'carlos' ? s.priceCarlos : s.priceIker) > 0)
       .map(s => `
       <div class="price-group">
-        <span style="font-size:0.85rem">${s.icon} ${s.name}</span>
+        <span style="font-size:0.85rem">${svcIcon(s.id, 16)} ${s.name}</span>
         <input type="number" class="form-input" id="price-${b}-${s.id}" value="${b==='carlos'?s.priceCarlos:s.priceIker}" style="width:80px;text-align:center">
       </div>`).join('');
   });
+  lucide.createIcons();
 }
 function savePrices() {
   appData.services.forEach(s => {
@@ -1231,6 +1241,7 @@ document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('cli
 function initAdmin() {
   document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
   renderDashboard();
+  lucide.createIcons();
 }
 
 document.getElementById('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyCode(); });

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CISA · Barbería & Estilo</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root {
   --bg: #0A0A0A;
@@ -148,9 +149,7 @@ section { padding: 80px 24px; }
 .service-icon { margin-bottom: 14px; font-size: 1.8rem; line-height: 1; }
 .service-name { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
 .service-desc { color: var(--text-secondary); font-size: 0.82rem; line-height: 1.6; margin-bottom: 16px; flex: 1; }
-.service-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border); }
-.service-duration { font-size: 0.72rem; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
-.service-duration svg { width: 14px; height: 14px; stroke: var(--text-tertiary); fill: none; stroke-width: 1.5; }
+
 
 /* BARBERS */
 .barbers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
@@ -186,6 +185,9 @@ section { padding: 80px 24px; }
 }
 .gallery-slide img, .gallery-slide video {
   width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.gallery-slide .gallery-vid-placeholder {
+  width: 100%; height: 100%; background: var(--surface);
 }
 .gallery-slide.active {
   width: 360px; height: 400px; z-index: 3; opacity: 1; filter: none;
@@ -391,19 +393,8 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   .hero-logo { max-height: 260px; justify-self: center; width: 80%; }
   .services-grid { grid-template-columns: 1fr; }
   .service-card { text-align: center; align-items: center; }
-  .service-meta { justify-content: center; }
-  .barbers-grid { grid-template-columns: 1fr; }
-  .barber-img { height: 220px; }
-  .form-row { grid-template-columns: 1fr; }
-  .time-grid { grid-template-columns: repeat(3, 1fr); }
-  .footer-bottom { flex-direction: column; text-align: center; }
-  .nav-links a:not(.nav-cta) { display: none; }
-  .nav-links { gap: 8px; }
-  .booking-form { padding: 20px 16px; }
 }
 </style>
-</head>
-<body>
 
 <!-- BACKGROUND DECORATIVE -->
 <div class="bg-deco">
@@ -525,28 +516,28 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
       <div class="schedule-note">
         <div style="font-size:0.72rem;color:var(--accent-2);font-weight:600;letter-spacing:0.5px">Carlos</div>
         <div class="contact-row">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <i data-lucide="phone" width="16" height="16" style="flex-shrink:0"></i>
           <a class="contact-link" href="tel:688790018" id="contactPhoneCarlos">688-790-018</a>
         </div>
         <div class="contact-row">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <i data-lucide="mail" width="16" height="16" style="flex-shrink:0"></i>
           <a class="contact-link" href="mailto:carlosalonsan2008@gmail.com" id="contactEmailCarlos">carlosalonsan2008@gmail.com</a>
         </div>
         <div class="contact-row">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <i data-lucide="map-pin" width="16" height="16" style="flex-shrink:0"></i>
           <a class="contact-link" href="https://maps.google.com/?q=Calle+Salamanca+número+53+Elda" target="_blank" id="contactAddressCarlos">Calle Salamanca número 53</a>
         </div>
         <div style="margin:12px 0 4px;font-size:0.72rem;color:var(--accent-2);font-weight:600;letter-spacing:0.5px">Iker</div>
         <div class="contact-row">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <i data-lucide="phone" width="16" height="16" style="flex-shrink:0"></i>
           <a class="contact-link" href="tel:613022267" id="contactPhoneIker">613-022-267</a>
         </div>
         <div class="contact-row">
-          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <i data-lucide="mail" width="16" height="16" style="flex-shrink:0"></i>
           <a class="contact-link" href="mailto:s4nchezzakatyrkk@gmail.com" id="contactEmailIker">s4nchezzakatyrkk@gmail.com</a>
         </div>
         <div class="contact-row">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <i data-lucide="map-pin" width="16" height="16" style="flex-shrink:0"></i>
           <a class="contact-link" href="https://maps.google.com/?q=Calle+Salamanca+número+45+Elda" target="_blank" id="contactAddressIker">Calle Salamanca número 45</a>
         </div>
       </div>
@@ -584,9 +575,6 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
         <div class="form-group">
           <label class="form-label">3 — Fecha y hora</label>
           <button class="dt-picker-btn" id="dtPickerBtn" onclick="toggleDtPicker()" type="button">
-            <span class="dt-cal-icon">
-              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            </span>
             <span class="dt-label" id="dtLabel">Seleccionar día y hora</span>
             <span class="dt-value" id="dtValue"></span>
             <span class="dt-arrow">▼</span>
@@ -631,9 +619,6 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
         <button class="form-submit" onclick="submitBooking()" type="button">Confirmar reserva</button>
       </div>
       <div class="booking-success" id="bookingSuccess">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
-        </div>
         <div class="success-title">¡Reserva confirmada!</div>
         <p class="success-detail" id="successDetail"></p>
         <button class="form-submit" style="margin-top:16px" onclick="resetForm()" type="button">Nueva reserva</button>
@@ -651,22 +636,10 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
     <div>
       <div class="footer-heading">Navegación</div>
       <ul class="footer-links">
-        <li><a href="#servicios">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          Servicios
-        </a></li>
-        <li><a href="#barberos">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          El equipo
-        </a></li>
-        <li><a href="#horarios">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          Horarios
-        </a></li>
-        <li><a href="#citas">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          Reservar cita
-        </a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#barberos">El equipo</a></li>
+        <li><a href="#horarios">Horarios</a></li>
+        <li><a href="#citas">Reservar cita</a></li>
       </ul>
     </div>
   </div>
@@ -705,7 +678,6 @@ function getDefaultData() {
 function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
 
 function formatPhone(n) { return n.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'); }
-const clockSvg = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>';
 let selectedBarber = null;
 let selectedTime = null;
 let appData = getData();
@@ -716,12 +688,8 @@ function renderServices() {
   const grid = document.getElementById('servicesGrid');
   grid.innerHTML = appData.services.map(s => `
     <div class="service-card">
-      <div class="service-icon">${s.icon}</div>
       <div class="service-name">${s.name}</div>
       <p class="service-desc">${s.desc}</p>
-      <div class="service-meta">
-        <span class="service-duration">${clockSvg} ${s.duration}</span>
-      </div>
     </div>`).join('');
 }
 
@@ -941,6 +909,7 @@ const galleryMedia = [
   { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
   { type:'image', src:'https://i.postimg.cc/xjPCXYyB/Whats-App-Image-2026-06-09-at-23-25-14.jpg', barber:'iker' },
   { type:'video', src:'https://files.catbox.moe/vbp6kk.mp4', barber:'carlos' },
+  { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
   { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
 ];
 let galleryIndex = 0;
@@ -956,12 +925,17 @@ function renderGallery() {
   ];
   track.innerHTML = slides.map(s => {
     const m = galleryMedia[s.i];
-    const tag = m.type === 'video' ? 'video' : 'img';
-    const srcAttr = 'src';
-    const extra = m.type === 'video' ? ' muted autoplay loop playsinline webkit-playsinline preload="metadata"' : ' loading="lazy"';
-    const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
     const badgeColor = m.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
-    return `<div class="gallery-slide ${s.cls}" style="border-color:${badgeColor}"><div class="gallery-slide-inner">${arrowHtml}<${tag} ${srcAttr}="${m.src}"${extra}></div></div>`;
+    const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
+    let mediaHtml;
+    if (m.type === 'video' && s.cls === 'active') {
+      mediaHtml = `<video src="${m.src}" muted autoplay loop playsinline preload="auto"></video>`;
+    } else if (m.type === 'video') {
+      mediaHtml = `<div class="gallery-vid-placeholder"></div>`;
+    } else {
+      mediaHtml = `<img src="${m.src}" loading="lazy">`;
+    }
+    return `<div class="gallery-slide ${s.cls}" style="border-color:${badgeColor}"><div class="gallery-slide-inner">${arrowHtml}${mediaHtml}</div></div>`;
   }).join('');
   const active = galleryMedia[galleryIndex];
   const caption = document.getElementById('galleryCaption');
@@ -1009,6 +983,7 @@ renderServiceSelect();
 renderPrices();
 renderGallery();
 initGallerySwipe();
+lucide.createIcons();
 function renderPrices() {
   ['carlos','iker'].forEach(b => {
     const el = document.getElementById('prices-' + b);
@@ -1016,7 +991,7 @@ function renderPrices() {
     el.innerHTML = appData.services
       .filter(s => (b === 'carlos' ? s.priceCarlos : s.priceIker) > 0)
       .map(s =>
-        `<div class="barber-price-row"><span class="barber-price-name">${s.icon} ${s.name}</span><span class="barber-price-val" style="color:${color}">${b === 'carlos' ? s.priceCarlos : s.priceIker}€</span></div>`
+        `<div class="barber-price-row"><span class="barber-price-name">${s.name}</span><span class="barber-price-val" style="color:${color}">${b === 'carlos' ? s.priceCarlos : s.priceIker}€</span></div>`
       ).join('');
   });
 }
