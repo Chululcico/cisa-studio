@@ -60,6 +60,9 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .login-btn { width: 100%; padding: 12px; background: var(--gradient); color: #0A0A0A; border: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; border-radius: var(--radius-sm); transition: opacity 0.2s; }
 .login-btn:hover { opacity: 0.9; }
 .login-footer { text-align: center; margin-top: 16px; font-size: 0.72rem; color: var(--text-tertiary); }
+.login-toggle { text-align: center; margin-top: 12px; font-size: 0.82rem; color: var(--text-secondary); cursor: pointer; }
+.login-toggle:hover { color: var(--accent-2); }
+.login-toggle strong { color: var(--accent-2); }
 
 /* SIDEBAR */
 .sidebar {
@@ -283,11 +286,13 @@ select option { background: var(--surface); color: var(--text); }
 <div class="login-overlay hidden" id="loginOverlay">
   <div class="login-box">
     <img class="login-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
-    <div class="login-title">Iniciar sesión</div>
+    <div class="login-title" id="loginTitle">Iniciar sesión</div>
     <div class="login-error" id="loginError">Email o contraseña incorrectos</div>
     <input class="login-input" id="loginUser" type="email" placeholder="Email" autocomplete="email">
     <input class="login-input" id="loginPass" type="password" placeholder="Contraseña" autocomplete="current-password">
-    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <input class="login-input hidden" id="loginPass2" type="password" placeholder="Repetir contraseña" style="margin-top:-4px">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Entrar</button>
+    <div class="login-toggle" id="loginToggle" onclick="toggleRegister()">¿No tienes cuenta? <strong>Registrarse</strong></div>
     <div class="login-footer"><span id="loginFooter"></span> · <a href="https://instagram.com/diegooaacosta" target="_blank" style="color:var(--accent-2);text-decoration:none">Diego Acosta</a></div>
   </div>
 </div>
@@ -692,16 +697,37 @@ let authData = {
 };
 let fbReady = false;
 
+let isRegisterMode = false;
+
 function doLogin() {
   const email = document.getElementById('loginUser').value.trim();
   const pass = document.getElementById('loginPass').value;
   if (!email || !pass) return;
   document.getElementById('loginError').classList.remove('show');
-  firebase.auth().signInWithEmailAndPassword(email, pass)
-    .catch(err => {
-      document.getElementById('loginError').textContent = err.message;
+  if (isRegisterMode) {
+    const pass2 = document.getElementById('loginPass2').value;
+    if (pass !== pass2) {
+      document.getElementById('loginError').textContent = 'Las contraseñas no coinciden';
       document.getElementById('loginError').classList.add('show');
-    });
+      return;
+    }
+    if (pass.length < 6) {
+      document.getElementById('loginError').textContent = 'La contraseña debe tener al menos 6 caracteres';
+      document.getElementById('loginError').classList.add('show');
+      return;
+    }
+    firebase.auth().createUserWithEmailAndPassword(email, pass)
+      .catch(err => {
+        document.getElementById('loginError').textContent = err.message;
+        document.getElementById('loginError').classList.add('show');
+      });
+  } else {
+    firebase.auth().signInWithEmailAndPassword(email, pass)
+      .catch(err => {
+        document.getElementById('loginError').textContent = err.message;
+        document.getElementById('loginError').classList.add('show');
+      });
+  }
 }
 function doLogout() {
   firebase.auth().signOut();
@@ -714,9 +740,34 @@ function verifyCode() {
     document.getElementById('loginOverlay').classList.remove('hidden');
     document.getElementById('codeError').classList.remove('show');
     document.getElementById('codeInput').value = '';
+    isRegisterMode = false;
+    updateLoginMode();
     return;
   }
   document.getElementById('codeError').classList.add('show');
+}
+
+function toggleRegister() {
+  isRegisterMode = !isRegisterMode;
+  document.getElementById('loginError').classList.remove('show');
+  updateLoginMode();
+}
+function updateLoginMode() {
+  const title = document.getElementById('loginTitle');
+  const btn = document.getElementById('loginBtn');
+  const pass2 = document.getElementById('loginPass2');
+  const toggle = document.getElementById('loginToggle');
+  if (isRegisterMode) {
+    title.textContent = 'Crear cuenta';
+    btn.textContent = 'Registrarse';
+    pass2.classList.remove('hidden');
+    toggle.innerHTML = '¿Ya tienes cuenta? <strong>Iniciar sesión</strong>';
+  } else {
+    title.textContent = 'Iniciar sesión';
+    btn.textContent = 'Entrar';
+    pass2.classList.add('hidden');
+    toggle.innerHTML = '¿No tienes cuenta? <strong>Registrarse</strong>';
+  }
 }
 
 function loadConfig(snap) {
@@ -1252,6 +1303,7 @@ firebase.auth().onAuthStateChanged(user => {
 
 document.getElementById('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyCode(); });
 document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('loginPass2').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginPass').focus(); });
 
 function initAdmin() {
