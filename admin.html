@@ -6,6 +6,9 @@
 <title>CISA · Panel de Administración</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style id="dynamic-styles">
 :root {
   --bg: #0A0A0A;
@@ -266,7 +269,7 @@ select option { background: var(--surface); color: var(--text); }
 <div class="bg-deco"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
 
 <!-- COMPANY CODE GATE -->
-<div class="code-overlay" id="codeOverlay">
+<div class="code-overlay hidden" id="codeOverlay">
   <div class="code-box">
     <img class="login-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
     <div class="login-title">Acceso restringido</div>
@@ -280,11 +283,11 @@ select option { background: var(--surface); color: var(--text); }
 <div class="login-overlay hidden" id="loginOverlay">
   <div class="login-box">
     <img class="login-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
-    <div class="login-title">Acceso administradores</div>
-    <div class="login-error" id="loginError">Credenciales incorrectas</div>
-    <input class="login-input" id="loginUser" placeholder="Usuario" autocomplete="username">
+    <div class="login-title">Iniciar sesión</div>
+    <div class="login-error" id="loginError">Email o contraseña incorrectos</div>
+    <input class="login-input" id="loginUser" type="email" placeholder="Email" autocomplete="email">
     <input class="login-input" id="loginPass" type="password" placeholder="Contraseña" autocomplete="current-password">
-    <button class="login-btn" onclick="doLogin()">Iniciar sesión</button>
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
     <div class="login-footer"><span id="loginFooter"></span> · <a href="https://instagram.com/diegooaacosta" target="_blank" style="color:var(--accent-2);text-decoration:none">Diego Acosta</a></div>
   </div>
 </div>
@@ -435,10 +438,6 @@ select option { background: var(--surface); color: var(--text); }
       <div class="card settings-section">
         <div class="settings-section-title">Empresa</div>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Código de empresa</label>
-            <input class="form-input" id="cfgCompanyCode" type="password" placeholder="••••••••">
-          </div>
           <div class="form-group">
             <label class="form-label">Nombre del negocio</label>
             <input class="form-input" id="cfgBusinessName" placeholder="CISA">
@@ -644,11 +643,19 @@ select option { background: var(--surface); color: var(--text); }
 <div class="toast" id="toast"></div>
 
 <script>
-// Clear session on every page load
-sessionStorage.removeItem('cisa_logged');
-sessionStorage.removeItem('cisa_code_verified');
 const STORAGE_KEY = 'barberco_data';
-const AUTH_KEY = 'cisa_auth';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBpzYwf72NeVXCx983zpCblveCgPEHCNBY",
+  authDomain: "cisastudio.firebaseapp.com",
+  databaseURL: "https://cisastudio-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cisastudio",
+  storageBucket: "cisastudio.firebasestorage.app",
+  messagingSenderId: "589097620111",
+  appId: "1:589097620111:web:5aca3de45d7dbfe32756fa",
+  measurementId: "G-QMDYTRGMPE"
+};
+firebase.initializeApp(firebaseConfig);
 
 // ====== COLOR SCHEMES ======
 const schemes = [
@@ -669,62 +676,40 @@ const schemeVars = {
   terra: { '--accent-1':'#E89F6C','--accent-2':'#C89B8B' },
 };
 
-// ====== AUTH ======
-function getAuth() {
-  try { return JSON.parse(localStorage.getItem(AUTH_KEY)) || getDefaultAuth(); }
-  catch { return getDefaultAuth(); }
-}
-function getDefaultAuth() {
-  return {
-    users: [
-      { username: 'admin', password: 'cisa2026' },
-      { username: '', password: '' },
-      { username: '', password: '' }
-    ],
-    companyCode: 'OpOber10',
-    businessName: 'CISA',
-    address: 'Calle Salamanca número 53',
-    addressCarlos: 'Calle Salamanca número 53',
-    addressIker: 'Calle Salamanca número 45',
-    phone: '688790018',
-    email: 'carlosalonsan2008@gmail.com',
-    phoneCarlos: '688790018',
-    phoneIker: '613022267',
-    emailCarlos: 'carlosalonsan2008@gmail.com',
-    emailIker: 's4nchezzakatyrkk@gmail.com',
-    scheme: 'cisa'
-  };
-}
-function saveAuth() { localStorage.setItem(AUTH_KEY, JSON.stringify(authData)); }
-
-let authData = getAuth();
+// ====== FIREBASE AUTH ======
+let authData = {
+  scheme: 'cisa',
+  businessName: 'CISA',
+  address: 'Calle Salamanca número 53',
+  addressCarlos: 'Calle Salamanca número 53',
+  addressIker: 'Calle Salamanca número 45',
+  phone: '688790018',
+  email: 'carlosalonsan2008@gmail.com',
+  phoneCarlos: '688790018',
+  phoneIker: '613022267',
+  emailCarlos: 'carlosalonsan2008@gmail.com',
+  emailIker: 's4nchezzakatyrkk@gmail.com',
+};
+let fbReady = false;
 
 function doLogin() {
-  const u = document.getElementById('loginUser').value.trim();
-  const p = document.getElementById('loginPass').value;
-  const valid = authData.users.some(usr => usr.username === u && usr.password === p);
-  if (valid) {
-    sessionStorage.setItem('cisa_logged', '1');
-    document.getElementById('loginOverlay').classList.add('hidden');
-    applyScheme(authData.scheme);
-    initAdmin();
-    return;
-  }
-  document.getElementById('loginError').classList.add('show');
+  const email = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) return;
+  document.getElementById('loginError').classList.remove('show');
+  firebase.auth().signInWithEmailAndPassword(email, pass)
+    .catch(err => {
+      document.getElementById('loginError').textContent = err.message;
+      document.getElementById('loginError').classList.add('show');
+    });
 }
 function doLogout() {
-  sessionStorage.removeItem('cisa_logged');
-  sessionStorage.removeItem('cisa_code_verified');
-  document.getElementById('loginOverlay').classList.add('hidden');
-  document.getElementById('codeOverlay').classList.remove('hidden');
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-  document.getElementById('codeInput').value = '';
+  firebase.auth().signOut();
 }
+
 function verifyCode() {
   const code = document.getElementById('codeInput').value.trim();
-  if (code === authData.companyCode) {
-    sessionStorage.setItem('cisa_code_verified', '1');
+  if (code === 'TijeraSeca') {
     document.getElementById('codeOverlay').classList.add('hidden');
     document.getElementById('loginOverlay').classList.remove('hidden');
     document.getElementById('codeError').classList.remove('show');
@@ -733,18 +718,27 @@ function verifyCode() {
   }
   document.getElementById('codeError').classList.add('show');
 }
-function checkLogin() {
-  if (sessionStorage.getItem('cisa_logged') === '1') {
-    document.getElementById('codeOverlay').classList.add('hidden');
-    document.getElementById('loginOverlay').classList.add('hidden');
+
+function loadConfig(snap) {
+  if (snap.exists()) {
+    const val = snap.val();
+    Object.assign(authData, val);
     applyScheme(authData.scheme);
-    return true;
   }
-  if (sessionStorage.getItem('cisa_code_verified') === '1') {
-    document.getElementById('codeOverlay').classList.add('hidden');
-    document.getElementById('loginOverlay').classList.remove('hidden');
+}
+function loadAppData(snap) {
+  if (snap.exists()) {
+    appData = snap.val();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
   }
-  return false;
+}
+
+function pushData() {
+  if (fbReady) firebase.database().ref('cisa/data').set(appData);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+function pushConfig() {
+  if (fbReady) firebase.database().ref('cisa/config').set(authData);
 }
 
 // ====== COLOR SCHEMES ======
@@ -757,7 +751,7 @@ function applyScheme(id) {
   root.setProperty('--gradient', `linear-gradient(135deg, ${vars['--accent-1']}, ${vars['--accent-2']})`);
   root.setProperty('--gradient-subtle', 'linear-gradient(135deg, color-mix(in srgb, var(--accent-1) 10%, transparent), color-mix(in srgb, var(--accent-2) 10%, transparent))');
   authData.scheme = id;
-  saveAuth();
+  pushConfig();
 }
 function renderSchemePicker() {
   const grid = document.getElementById('schemeGrid');
@@ -777,25 +771,11 @@ function selectScheme(id) {
   showToast('Esquema de colores actualizado');
 }
 
-// ====== LOGIN / COMPANY SETTINGS ======
+// ====== COMPANY SETTINGS ======
 function renderUsers() {
-  const c = document.getElementById('usersContainer');
-  c.innerHTML = authData.users.map((u, i) => `
-    <div class="user-row">
-      <input class="form-input" id="user-${i}-name" value="${u.username}" placeholder="Usuario ${i+1}" style="margin:0">
-      <input class="form-input" id="user-${i}-pass" type="password" value="${u.password}" placeholder="Contraseña" style="margin:0">
-      <span style="font-size:0.7rem;color:var(--text-tertiary);text-align:center">#${i+1}</span>
-    </div>`).join('');
-}
-function saveUsers() {
-  authData.users = authData.users.map((_, i) => ({
-    username: document.getElementById(`user-${i}-name`).value.trim(),
-    password: document.getElementById(`user-${i}-pass`).value
-  }));
-  saveAuth(); showToast('Usuarios guardados');
+  document.getElementById('usersContainer').innerHTML = '<div style="color:var(--text-tertiary);font-size:0.85rem;padding:8px 0">Gestiona los usuarios desde <a href="https://console.firebase.google.com/project/cisastudio/authentication/users" target="_blank" style="color:var(--accent-2)">Firebase Console</a></div>';
 }
 function saveCompany() {
-  authData.companyCode = document.getElementById('cfgCompanyCode').value.trim();
   authData.businessName = document.getElementById('cfgBusinessName').value.trim();
   authData.address = document.getElementById('cfgAddress').value.trim();
   authData.phone = document.getElementById('cfgPhone').value.trim();
@@ -806,7 +786,7 @@ function saveCompany() {
   authData.phoneIker = document.getElementById('cfgPhoneIker').value.trim();
   authData.emailCarlos = document.getElementById('cfgEmailCarlos').value.trim().toLowerCase();
   authData.emailIker = document.getElementById('cfgEmailIker').value.trim();
-  saveAuth();
+  pushConfig();
   showToast('Datos de empresa guardados');
 }
 
@@ -904,8 +884,16 @@ function getDefaultData() {
   };
 }
 function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
-function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }
-function resetData() { if (!confirm('¿Restablecer todos los datos a valores por defecto? Se perderán las citas guardadas.')) return; localStorage.removeItem(STORAGE_KEY); location.reload(); }
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  if (fbReady) firebase.database().ref('cisa/data').set(appData);
+}
+function resetData() {
+  if (!confirm('¿Restablecer todos los datos a valores por defecto? Se perderán las citas guardadas.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  if (fbReady) firebase.database().ref('cisa/data').remove();
+  location.reload();
+}
 
 function svcIcon(id, size) {
   const names = {1:'scissors', 2:'sparkles', 3:'scissors', 5:'scissors', 6:'star'};
@@ -1210,7 +1198,6 @@ function saveSchedule() {
 
 // ====== UTILS ======
 function loadCompany() {
-  document.getElementById('cfgCompanyCode').value = authData.companyCode || '';
   document.getElementById('cfgBusinessName').value = authData.businessName || '';
   document.getElementById('cfgAddress').value = authData.address || '';
   document.getElementById('cfgPhone').value = authData.phone || '';
@@ -1237,19 +1224,40 @@ function showToast(msg, isError) {
 }
 document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
 
-// ====== INIT ======
-function initAdmin() {
-  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
-  renderDashboard();
-  lucide.createIcons();
-}
+// ====== FIREBASE AUTH LISTENER + INIT ======
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    fbReady = true;
+    document.getElementById('codeOverlay').classList.add('hidden');
+    document.getElementById('loginOverlay').classList.add('hidden');
+    const db = firebase.database();
+    db.ref('cisa/config').on('value', snap => {
+      loadConfig(snap);
+      applyScheme(authData.scheme);
+    });
+    db.ref('cisa/data').on('value', snap => {
+      loadAppData(snap);
+      document.getElementById('loginError').classList.remove('show');
+      initAdmin();
+    });
+  } else {
+    fbReady = false;
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('codeOverlay').classList.remove('hidden');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginFooter').textContent = 'Panel de administración';
+  }
+});
 
 document.getElementById('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyCode(); });
 document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginPass').focus(); });
 
-if (!checkLogin()) {
-  document.getElementById('loginFooter').textContent = 'Panel de administración';
+function initAdmin() {
+  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+  renderDashboard();
+  lucide.createIcons();
 }
 </script>
 </body>
