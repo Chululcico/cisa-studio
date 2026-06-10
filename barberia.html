@@ -6,6 +6,8 @@
 <title>CISA · Barbería & Estilo</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
 :root {
   --bg: #0A0A0A;
@@ -653,6 +655,16 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
 
 <script>
 const STORAGE_KEY = 'barberco_data';
+const firebaseConfig = {
+  apiKey: "AIzaSyBpzYwf72NeVXCx983zpCblveCgPEHCNBY",
+  authDomain: "cisastudio.firebaseapp.com",
+  databaseURL: "https://cisastudio-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cisastudio",
+  storageBucket: "cisastudio.firebasestorage.app",
+  messagingSenderId: "589097620111",
+  appId: "1:589097620111:web:5aca3de45d7dbfe32756fa"
+};
+firebase.initializeApp(firebaseConfig);
 function getDefaultData() {
   return {
     services: [
@@ -854,6 +866,7 @@ function submitBooking() {
   };
   appData.appointments.push(appt);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  try { firebase.database().ref('cisa/appointments').push(appt); } catch(e) {}
 
   document.getElementById('bookingFormInner').style.display = 'none';
   const succ = document.getElementById('bookingSuccess');
