@@ -866,7 +866,7 @@ function submitBooking() {
   };
   appData.appointments.push(appt);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-  try { firebase.database().ref('cisa/appointments').push(appt); } catch(e) {}
+  try { firebase.database().ref('cisa/data/appointments').push(appt); } catch(e) {}
 
   document.getElementById('bookingFormInner').style.display = 'none';
   const succ = document.getElementById('bookingSuccess');
