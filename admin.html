@@ -264,7 +264,54 @@ select option { background: var(--surface); color: var(--text); }
   .main { margin-left: 56px; }
   .topbar { padding: 0 16px; }
   .content { padding: 16px; }
+  .filter-bar { flex-wrap: wrap; }
+  .filter-bar input, .filter-bar select { min-width: 0; flex: 1 1 auto; }
+  .table-wrap { overflow-x: auto; }
+  .table-wrap table { min-width: 600px; }
+  .schedule-row { grid-template-columns: 80px 1fr 1fr 44px; gap: 6px; }
+  .schedule-row input { font-size: 0.75rem; }
 }
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .scheme-grid { grid-template-columns: 1fr; }
+  .sidebar { width: 48px; }
+  .main { margin-left: 48px; }
+  .content { padding: 12px; }
+  .stat-card { padding: 14px; }
+  .card { padding: 14px; }
+  .modal { max-width: 100%; margin: 12px; padding: 20px; max-height: 85vh; }
+  .topbar-title { font-size: 0.85rem; }
+  .topbar-badge { padding: 3px 10px; font-size: 0.65rem; }
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-bar input, .filter-bar select { width: 100%; }
+  .filter-bar > div { min-width: 0 !important; width: 100%; }
+  .filter-bar > div input { width: 100%; }
+  .schedule-row { grid-template-columns: 70px 1fr; gap: 4px; padding: 8px 0; }
+  .schedule-row .schedule-day { grid-column: 1; }
+  .schedule-row .toggle { grid-column: 2; justify-self: end; }
+  .schedule-row input { font-size: 0.7rem; padding: 6px 8px; grid-column: 1 / -1; }
+  .nav-item { padding: 8px; }
+  .sidebar-logo img { height: 20px; }
+  .stat-val { font-size: 1.5rem; }
+  .upcoming-item { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .upcoming-time { text-align: left; }
+  .barber-dash-stats { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .barber-dash-stat { padding: 6px; }
+  .barber-dash-stat-val { font-size: 1rem; }
+  .price-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 380px) {
+  .sidebar { width: 40px; }
+  .main { margin-left: 40px; }
+  .nav-item { padding: 6px; }
+  .content { padding: 8px; }
+  .topbar { padding: 0 8px; }
+  .topbar-title { font-size: 0.75rem; }
+  .stat-card { padding: 10px; }
+  .stat-val { font-size: 1.2rem; }
+  .card { padding: 10px; }
+  .stats-grid { gap: 6px; }
+} 
 </style>
 </head>
 <body>
@@ -299,7 +346,7 @@ select option { background: var(--surface); color: var(--text); }
 
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <img src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+    <img id="sidebarLogo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
     <span class="sidebar-logo-text">Admin</span>
   </div>
   <nav class="sidebar-nav">
@@ -309,6 +356,7 @@ select option { background: var(--surface); color: var(--text); }
     <div class="nav-section">Gestión</div>
     <div class="nav-item" onclick="showPage('barberos', this)"><span class="nav-icon"><i data-lucide="users" width="16" height="16"></i></span><span>Barberos</span></div>
     <div class="nav-item" onclick="showPage('servicios', this)"><span class="nav-icon"><i data-lucide="scissors" width="16" height="16"></i></span><span>Servicios</span></div>
+    <div class="nav-item" onclick="showPage('multimedia', this)"><span class="nav-icon"><i data-lucide="image" width="16" height="16"></i></span><span>Multimedia</span></div>
     <div class="nav-item" onclick="showPage('horarios', this)"><span class="nav-icon"><i data-lucide="clock" width="16" height="16"></i></span><span>Horarios</span></div>
     <div class="nav-section">Sistema</div>
     <div class="nav-item" onclick="showPage('configuracion', this)"><span class="nav-icon"><i data-lucide="settings" width="16" height="16"></i></span><span>Configuración</span></div>
@@ -395,7 +443,7 @@ select option { background: var(--surface); color: var(--text); }
       <div class="barber-edit-grid" id="barberEditGrid"></div>
       <div class="card" style="margin-top:12px">
         <div class="card-header"><div class="card-title">Precios por servicio</div></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div class="price-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
           <div><div style="color:#D4708A;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Carlos</div><div id="carlosPrices"></div></div>
           <div><div style="color:#A87DB8;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Iker</div><div id="ikerPrices"></div></div>
         </div>
@@ -416,6 +464,31 @@ select option { background: var(--surface); color: var(--text); }
             <thead><tr><th>Icono</th><th>Servicio</th><th>Duración</th><th>Descripción</th><th>Acciones</th></tr></thead>
             <tbody id="servicesTable"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MULTIMEDIA -->
+    <div class="page" id="page-multimedia">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Logo de la web</div></div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <img id="logoPreview" src="" style="height:50px;border-radius:8px;border:1px solid var(--border);padding:4px;background:var(--bg);max-width:200px;object-fit:contain">
+          <div style="flex:1;min-width:200px">
+            <input class="form-input" id="mediaLogoUrl" placeholder="URL del logo">
+          </div>
+          <button class="btn btn-primary" onclick="saveLogoUrl()">Guardar logo</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Cortes realizados (Galería)</div>
+          <button class="btn btn-primary btn-sm" onclick="addGalleryItem()">+ Añadir</button>
+        </div>
+        <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px">Gestiona las imágenes y vídeos del carrusel de la web pública (barberia.html).</div>
+        <div id="galleryManager"></div>
+        <div style="text-align:right;margin-top:12px">
+          <button class="btn btn-primary" onclick="saveGallery()">Guardar galería</button>
         </div>
       </div>
     </div>
@@ -936,6 +1009,22 @@ function getDefaultData() {
       { id:'carlos', name:'Carlos', role:'Barbero — Con Curso', bio:'Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.', tags:['Corte clásico','Degradado','Barba'], color1:'#D4708A', color2:'#F2B5C8', img:'https://i.postimg.cc/QNgF3jWm/c-1-0.jpg' },
       { id:'iker', name:'Iker', role:'Barbero — Estilo Completo', bio:'Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.', tags:['Corte completo','Cejas','VIP'], color1:'#A87DB8', color2:'#C9A4D4', img:'https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=700&q=80' },
     ],
+    logoUrl: 'https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png',
+    gallery: [
+      { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg', barber:'carlos' },
+      { type:'image', src:'https://i.postimg.cc/pVBTmxYg/Whats-App-Image-2026-06-09-at-23-25-42.jpg', barber:'iker' },
+      { type:'video', src:'https://files.catbox.moe/m0wnp5.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/4wqr9r.mp4', barber:'iker' },
+      { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
+      { type:'image', src:'https://i.postimg.cc/1zwK1fhf/12.jpg', barber:'iker' },
+      { type:'video', src:'https://files.catbox.moe/j4tz6o.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/nz1ian.mp4', barber:'iker' },
+      { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
+      { type:'image', src:'https://i.postimg.cc/xjPCXYyB/Whats-App-Image-2026-06-09-at-23-25-14.jpg', barber:'iker' },
+      { type:'video', src:'https://files.catbox.moe/vbp6kk.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
+    ],
   };
 }
 function getData() {
@@ -976,11 +1065,12 @@ function showPage(id, el) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   if (el) el.classList.add('active');
-  const titles = { dashboard:'Dashboard', citas:'Citas', barberos:'Barberos', servicios:'Servicios', horarios:'Horarios', configuracion:'Configuración' };
+  const titles = { dashboard:'Dashboard', citas:'Citas', barberos:'Barberos', servicios:'Servicios', multimedia:'Multimedia', horarios:'Horarios', configuracion:'Configuración' };
   document.getElementById('topbarTitle').textContent = titles[id] || id;
   if (id === 'citas') renderAppointments();
   if (id === 'servicios') renderServicesTable();
   if (id === 'horarios') renderScheduleEditor();
+  if (id === 'multimedia') renderMediaManager();
   if (id === 'barberos') { renderBarberEdit(); renderPrices(); }
   if (id === 'dashboard') renderDashboard();
   if (id === 'configuracion') { renderUsers(); renderSchemePicker(); loadCompany(); }
@@ -1236,6 +1326,58 @@ function savePrices() {
   saveData(); showToast('Precios actualizados ✓');
 }
 
+// ====== MULTIMEDIA ======
+function renderMediaManager() {
+  appData = getData();
+  document.getElementById('mediaLogoUrl').value = appData.logoUrl || '';
+  document.getElementById('logoPreview').src = appData.logoUrl || '';
+  const container = document.getElementById('galleryManager');
+  if (!appData.gallery) appData.gallery = getDefaultData().gallery;
+  container.innerHTML = appData.gallery.map((item, idx) => `
+    <div class="gallery-edit-row" style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+      <select class="form-select" id="gal-type-${idx}" style="width:90px;flex-shrink:0">
+        <option value="image" ${item.type==='image'?'selected':''}>Imagen</option>
+        <option value="video" ${item.type==='video'?'selected':''}>Vídeo</option>
+      </select>
+      <input class="form-input" id="gal-src-${idx}" value="${item.src}" placeholder="URL del archivo" style="flex:1;min-width:160px">
+      <select class="form-select" id="gal-barber-${idx}" style="width:100px;flex-shrink:0">
+        <option value="carlos" ${item.barber==='carlos'?'selected':''}>Carlos</option>
+        <option value="iker" ${item.barber==='iker'?'selected':''}>Iker</option>
+      </select>
+      <button class="btn btn-danger btn-sm" onclick="removeGalleryItem(${idx})" style="flex-shrink:0"><i data-lucide="trash-2" width="14" height="14"></i></button>
+    </div>`).join('');
+  lucide.createIcons();
+}
+function addGalleryItem() {
+  if (!appData.gallery) appData.gallery = [];
+  appData.gallery.push({ type:'image', src:'', barber:'carlos' });
+  renderMediaManager();
+}
+function removeGalleryItem(idx) {
+  appData.gallery.splice(idx, 1);
+  renderMediaManager();
+}
+function saveGallery() {
+  if (!appData.gallery) appData.gallery = [];
+  appData.gallery.forEach((item, idx) => {
+    item.type = document.getElementById(`gal-type-${idx}`).value;
+    item.src = document.getElementById(`gal-src-${idx}`).value.trim();
+    item.barber = document.getElementById(`gal-barber-${idx}`).value;
+  });
+  appData.gallery = appData.gallery.filter(item => item.src);
+  saveData();
+  showToast('Galería guardada ✓');
+}
+function saveLogoUrl() {
+  const url = document.getElementById('mediaLogoUrl').value.trim();
+  if (!url) { showToast('Introduce una URL de logo', true); return; }
+  appData.logoUrl = url;
+  document.getElementById('sidebarLogo').src = url;
+  document.getElementById('logoPreview').src = url;
+  saveData();
+  showToast('Logo actualizado ✓');
+}
+
 // ====== SCHEDULE ======
 function renderScheduleEditor() {
   appData = getData();
@@ -1323,6 +1465,7 @@ document.getElementById('loginUser').addEventListener('keydown', e => { if (e.ke
 
 function initAdmin() {
   document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+  if (appData.logoUrl) document.getElementById('sidebarLogo').src = appData.logoUrl;
   renderDashboard();
   lucide.createIcons();
 }

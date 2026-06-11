@@ -395,6 +395,37 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   .hero-logo { max-height: 260px; justify-self: center; width: 80%; }
   .services-grid { grid-template-columns: 1fr; }
   .service-card { text-align: center; align-items: center; }
+  .barbers-grid { grid-template-columns: 1fr; }
+  .barber-img { height: 220px; }
+  .form-row { grid-template-columns: 1fr; }
+  .barber-selector { grid-template-columns: 1fr; }
+  .time-grid { grid-template-columns: repeat(3, 1fr); }
+  .gallery-track { min-height: 260px; }
+  .gallery-slide.active { width: 180px; height: 240px; }
+  .gallery-slide.side { width: 90px; height: 130px; }
+  .gallery-slide.side-left { transform: translateX(-110px); }
+  .gallery-slide.side-right { transform: translateX(110px); }
+  .schedule-wrap { overflow-x: auto; }
+  .schedule-table { min-width: 420px; }
+  .nav-links { gap: 10px; }
+  .nav-links a:not(.nav-cta) { font-size: 0.78rem; }
+  .nav-cta { padding: 6px 14px; font-size: 0.78rem; }
+  .booking-form { padding: 16px; }
+  .cal-grid { gap: 2px; }
+  .cal-day { padding: 6px 3px; font-size: 0.72rem; }
+  .gallery-arrow { width: 28px; height: 28px; font-size: 0.8rem; }
+  .gallery-arrow-left { left: 4px; }
+  .gallery-arrow-right { right: 4px; }
+  .gallery-dot { width: 6px; height: 6px; }
+  .gallery-dot.active { width: 18px; }
+}
+@media (max-width: 380px) {
+  .time-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-slide.active { width: 150px; height: 200px; }
+  .gallery-slide.side { width: 70px; height: 100px; }
+  .gallery-slide.side-left { transform: translateX(-90px); }
+  .gallery-slide.side-right { transform: translateX(90px); }
+  .gallery-track { min-height: 220px; }
 }
 </style>
 
@@ -416,7 +447,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
 
 <nav>
   <div class="nav-inner">
-    <img class="nav-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+    <img class="nav-logo" id="navLogo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
     <ul class="nav-links">
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#barberos">Barberos</a></li>
@@ -437,7 +468,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
         <a href="#barberos" class="hero-btn-outline">Conócenos</a>
       </div>
     </div>
-    <img class="hero-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+    <img class="hero-logo" id="heroLogo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
   </div>
 </section>
 
@@ -632,7 +663,7 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
 <footer>
   <div class="footer-inner">
     <div>
-      <img class="footer-logo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
+      <img class="footer-logo" id="footerLogo" src="https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png" alt="CISA">
       <p class="footer-desc">Barbería de referencia en Elda. Tradición, precisión y estilo en cada corte.</p>
     </div>
     <div>
@@ -701,9 +732,34 @@ function getDefaultData() {
       { day: 'Domingo', carlos: '—', iker: '—', open: false },
     ],
     appointments: [],
+    logoUrl: 'https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png',
+    gallery: [
+      { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg', barber:'carlos' },
+      { type:'image', src:'https://i.postimg.cc/pVBTmxYg/Whats-App-Image-2026-06-09-at-23-25-42.jpg', barber:'iker' },
+      { type:'video', src:'https://files.catbox.moe/m0wnp5.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/4wqr9r.mp4', barber:'iker' },
+      { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
+      { type:'image', src:'https://i.postimg.cc/1zwK1fhf/12.jpg', barber:'iker' },
+      { type:'video', src:'https://files.catbox.moe/j4tz6o.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/nz1ian.mp4', barber:'iker' },
+      { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
+      { type:'image', src:'https://i.postimg.cc/xjPCXYyB/Whats-App-Image-2026-06-09-at-23-25-14.jpg', barber:'iker' },
+      { type:'video', src:'https://files.catbox.moe/vbp6kk.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
+      { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
+    ],
   };
 }
-function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
+function getData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return getDefaultData();
+    const data = JSON.parse(raw);
+    const defaults = getDefaultData();
+    Object.keys(defaults).forEach(k => { if (!(k in data)) data[k] = defaults[k]; });
+    return data;
+  } catch { return getDefaultData(); }
+}
 
 function formatPhone(n) { return n.replace(/(\d{3})(\d{3})(\d{3})/, '$1-$2-$3'); }
 let selectedBarber = null;
@@ -926,21 +982,6 @@ function showToast(msg) {
 }
 
 // ====== GALLERY ======
-const galleryMedia = [
-  { type:'image', src:'https://i.postimg.cc/xTHbqL78/c-c-1.jpg', barber:'carlos' },
-  { type:'image', src:'https://i.postimg.cc/pVBTmxYg/Whats-App-Image-2026-06-09-at-23-25-42.jpg', barber:'iker' },
-  { type:'video', src:'https://files.catbox.moe/m0wnp5.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/4wqr9r.mp4', barber:'iker' },
-  { type:'image', src:'https://i.postimg.cc/J4JBtjgn/c-c-2.jpg', barber:'carlos' },
-  { type:'image', src:'https://i.postimg.cc/1zwK1fhf/12.jpg', barber:'iker' },
-  { type:'video', src:'https://files.catbox.moe/j4tz6o.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/nz1ian.mp4', barber:'iker' },
-  { type:'image', src:'https://i.postimg.cc/PrZ8N1cP/c-c-3.jpg', barber:'carlos' },
-  { type:'image', src:'https://i.postimg.cc/xjPCXYyB/Whats-App-Image-2026-06-09-at-23-25-14.jpg', barber:'iker' },
-  { type:'video', src:'https://files.catbox.moe/vbp6kk.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
-  { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
-];
 let galleryIndex = 0;
 
 function renderGallery() {
@@ -953,7 +994,7 @@ function renderGallery() {
     { i: next, cls: 'side side-right', arrow: 'galleryNext()', arrowDir: '›', arrowCls: 'gallery-arrow-right' },
   ];
   track.innerHTML = slides.map(s => {
-    const m = galleryMedia[s.i];
+    const m = appData.gallery[s.i];
     const badgeColor = m.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
     const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
     let mediaHtml;
@@ -966,7 +1007,7 @@ function renderGallery() {
     }
     return `<div class="gallery-slide ${s.cls}" style="border-color:${badgeColor}"><div class="gallery-slide-inner">${arrowHtml}${mediaHtml}</div></div>`;
   }).join('');
-  const active = galleryMedia[galleryIndex];
+  const active = appData.gallery[galleryIndex];
   const caption = document.getElementById('galleryCaption');
   if (caption) {
     const name = active.barber === 'iker' ? 'Iker' : 'Carlos';
@@ -976,8 +1017,8 @@ function renderGallery() {
   }
   renderDots();
 }
-function getPrevIndex(i) { return i === 0 ? galleryMedia.length - 1 : i - 1; }
-function getNextIndex(i) { return i === galleryMedia.length - 1 ? 0 : i + 1; }
+function getPrevIndex(i) { return i === 0 ? appData.gallery.length - 1 : i - 1; }
+function getNextIndex(i) { return i === appData.gallery.length - 1 ? 0 : i + 1; }
 function goToSlide(i) { galleryIndex = i; renderGallery(); }
 function galleryPrev() { goToSlide(getPrevIndex(galleryIndex)); }
 function galleryNext() { goToSlide(getNextIndex(galleryIndex)); }
@@ -993,7 +1034,7 @@ function initGallerySwipe() {
 }
 function renderDots() {
   const dots = document.getElementById('galleryDots');
-  dots.innerHTML = galleryMedia.map((_, i) =>
+  dots.innerHTML = appData.gallery.map((_, i) =>
     `<button class="gallery-dot ${i === galleryIndex ? 'active' : ''}" onclick="goToSlide(${i})"></button>`
   ).join('');
 }
@@ -1006,6 +1047,11 @@ document.addEventListener('keydown', function(e) {
 const now = new Date();
 calYear = now.getFullYear();
 calMonth = now.getMonth();
+if (appData.logoUrl) {
+  document.getElementById('navLogo').src = appData.logoUrl;
+  document.getElementById('heroLogo').src = appData.logoUrl;
+  document.getElementById('footerLogo').src = appData.logoUrl;
+}
 renderServices();
 renderSchedule();
 renderServiceSelect();
