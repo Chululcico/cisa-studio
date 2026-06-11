@@ -37,8 +37,8 @@
 
 ## Anuncios / Popup (admin Anuncios page)
 - **Popup** stored in `appData.adPopup` — enabled/disabled toggle
-- Customizable: title, description, button text+link, background gradient (presets + custom), text color, shape (center/bottom/full), show-once-per-session, optional barber card with price
-- Admin preview button shows a live preview modal
+- Customizable: title, description (multi-line via `<br>`), image URL (live preview in admin), button text+link, background gradient (presets + custom), text color, shape (center/bottom/full), show-once-per-session (uncheck = show every reload), optional barber card with price
+- Admin preview button shows a live preview modal with image
 - barberia.html: `showPopupIfNeeded()` runs on page load — renders the popup with full styling, auto-closes on overlay click, respects `showOnce` via `sessionStorage`
 
 ## Critical rules

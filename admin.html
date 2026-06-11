@@ -518,6 +518,11 @@ select option { background: var(--surface); color: var(--text); }
           <label class="form-label">Descripción</label>
           <textarea class="form-textarea" id="popupDesc" rows="2" placeholder="Describe tu oferta o anuncio…"></textarea>
         </div>
+        <div class="form-group">
+          <label class="form-label">Imagen (opcional)</label>
+          <input class="form-input" id="popupImageUrl" placeholder="https://i.postimg.cc/...jpg">
+          <div id="popupImagePreview" style="margin-top:6px;display:none"><img style="max-width:100%;max-height:120px;border-radius:8px;border:1px solid var(--border)"></div>
+        </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Texto del botón</label>
@@ -813,6 +818,7 @@ select option { background: var(--surface); color: var(--text); }
     <div id="popupPreviewInner" style="border-radius:var(--radius);padding:32px;text-align:center;position:relative;overflow:hidden">
       <button class="modal-close" onclick="closeModal('popupPreviewOverlay')" style="position:absolute;top:8px;right:12px;z-index:5;font-size:1.5rem">×</button>
       <div id="popupPreviewTitle" style="font-size:1.3rem;font-weight:700;margin-bottom:8px;line-height:1.3"></div>
+      <div id="popupPreviewImgContainer" style="margin-bottom:16px;display:none"><img id="popupPreviewImg" style="max-width:100%;max-height:180px;border-radius:8px;object-fit:cover"></div>
       <div id="popupPreviewDesc" style="font-size:0.85rem;line-height:1.6;margin-bottom:20px"></div>
       <div id="popupPreviewBarber" style="margin-bottom:16px"></div>
       <a id="popupPreviewBtn" style="display:inline-block;padding:12px 28px;border-radius:28px;font-weight:600;font-size:0.85rem;text-decoration:none;cursor:default"></a>
@@ -1146,6 +1152,7 @@ function getDefaultData() {
       showOnce: true,
       showBarberCard: false,
       barberCard: 'carlos',
+      imageUrl: '',
     },
   };
 }
@@ -1524,6 +1531,8 @@ function renderPopupEditor() {
   document.getElementById('popupShowBarber').checked = popup.showBarberCard || false;
   document.getElementById('popupBarber').value = popup.barberCard || 'carlos';
   document.getElementById('popupPrice').value = popup.price || '';
+  document.getElementById('popupImageUrl').value = popup.imageUrl || '';
+  updatePopupImagePreview();
   document.getElementById('popupBarberSection').style.display = popup.showBarberCard ? 'block' : 'none';
   const toggle = document.getElementById('popupToggleMain');
   toggle.classList.toggle('on', popup.enabled);
@@ -1545,6 +1554,15 @@ function selectPopupGradient(id) {
     el.style.borderColor = el.dataset.gradId === id ? 'var(--accent-2)' : 'transparent';
   });
 }
+function updatePopupImagePreview() {
+  const url = document.getElementById('popupImageUrl').value.trim();
+  const container = document.getElementById('popupImagePreview');
+  if (url) { container.style.display = 'block'; container.querySelector('img').src = url; }
+  else { container.style.display = 'none'; }
+}
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'popupImageUrl') updatePopupImagePreview();
+});
 function togglePopupEnabled() {
   const toggle = document.getElementById('popupToggleMain');
   toggle.classList.toggle('on');
@@ -1564,6 +1582,7 @@ function savePopup() {
   popup.showBarberCard = document.getElementById('popupShowBarber').checked;
   popup.barberCard = document.getElementById('popupBarber').value;
   popup.price = parseFloat(document.getElementById('popupPrice').value) || 0;
+  popup.imageUrl = document.getElementById('popupImageUrl').value.trim();
   appData.adPopup = popup;
   saveData();
   showToast('Anuncio guardado ✓');
@@ -1577,15 +1596,20 @@ function previewPopup() {
   const showBarber = document.getElementById('popupShowBarber').checked;
   const barber = document.getElementById('popupBarber').value;
   const price = parseFloat(document.getElementById('popupPrice').value) || 0;
+  const imgUrl = document.getElementById('popupImageUrl').value.trim();
   const inner = document.getElementById('popupPreviewInner');
   inner.style.background = bg;
   inner.style.color = textColor;
-  document.getElementById('popupPreviewTitle').textContent = title;
+  document.getElementById('popupPreviewTitle').innerHTML = title.replace(/\n/g, '<br>');
   document.getElementById('popupPreviewTitle').style.color = textColor;
-  document.getElementById('popupPreviewDesc').textContent = desc;
+  document.getElementById('popupPreviewDesc').innerHTML = desc.replace(/\n/g, '<br>');
   document.getElementById('popupPreviewDesc').style.color = textColor;
   const barberEl = document.getElementById('popupPreviewBarber');
   const barberData = appData.barbers?.find(x => x.id === barber);
+  const imgContainer = document.getElementById('popupPreviewImgContainer');
+  const imgEl = document.getElementById('popupPreviewImg');
+  if (imgUrl) { imgContainer.style.display = 'block'; imgEl.src = imgUrl; }
+  else { imgContainer.style.display = 'none'; }
   if (showBarber && barberData) {
     barberEl.style.display = 'block';
     barberEl.innerHTML = `<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:8px">

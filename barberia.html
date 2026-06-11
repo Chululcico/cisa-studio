@@ -802,6 +802,7 @@ function getDefaultData() {
       showBarberCard: false,
       barberCard: 'carlos',
       price: 0,
+      imageUrl: '',
     },
   };
 }
@@ -1123,8 +1124,24 @@ function showPopupIfNeeded() {
   const card = document.getElementById('popupCard');
   card.style.background = popup.bgGradient || 'linear-gradient(135deg, #F2B5C8, #C9A4D4)';
   card.style.color = popup.textColor || '#0A0A0A';
-  document.getElementById('popupTitle2').textContent = popup.title || '';
-  document.getElementById('popupDesc2').textContent = popup.description || '';
+  document.getElementById('popupTitle2').innerHTML = (popup.title || '').replace(/\n/g, '<br>');
+  const descEl = document.getElementById('popupDesc2');
+  descEl.innerHTML = (popup.description || '').replace(/\n/g, '<br>');
+  // insert image if present
+  var imgContainer = document.getElementById('popupImgContainer2');
+  if (!imgContainer) {
+    imgContainer = document.createElement('div');
+    imgContainer.id = 'popupImgContainer2';
+    imgContainer.style.cssText = 'margin-bottom:16px;display:none';
+    var img = document.createElement('img');
+    img.id = 'popupImg2';
+    img.style.cssText = 'max-width:100%;max-height:180px;border-radius:8px;object-fit:cover';
+    imgContainer.appendChild(img);
+    descEl.parentNode.insertBefore(imgContainer, descEl);
+  }
+  var imgEl = document.getElementById('popupImg2');
+  if (popup.imageUrl) { imgContainer.style.display = 'block'; imgEl.src = popup.imageUrl; }
+  else { imgContainer.style.display = 'none'; }
   const btnEl = document.getElementById('popupBtn2');
   btnEl.textContent = popup.buttonText || 'Cerrar';
   btnEl.href = popup.buttonLink || '#';
