@@ -753,14 +753,50 @@ firebase.database().ref('cisa/data/appointments').on('value', snap => {
     }
   }
 }, err => console.error('FIREBASE_SYNC_ERR', err));
+// Sync adPopup from Firebase (set by admin)
+firebase.database().ref('cisa/data/adPopup').on('value', snap => {
+  if (snap.exists()) {
+    appData.adPopup = snap.val();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    const overlay = document.getElementById('popupOverlay');
+    if (overlay.classList.contains('open')) overlay.classList.remove('open');
+    showPopupIfNeeded();
+  }
+}, err => console.error('POPUP_SYNC_ERR', err));
+// Sync public config from admin (services, barbers, schedule, gallery, logo, popup)
+firebase.database().ref('cisa/data/public').on('value', snap => {
+  if (snap.exists()) {
+    const pd = snap.val();
+    if (pd.services) appData.services = pd.services;
+    if (pd.barbers) appData.barbers = pd.barbers;
+    if (pd.schedule) appData.schedule = pd.schedule;
+    if (pd.logoUrl) appData.logoUrl = pd.logoUrl;
+    if (pd.gallery) appData.gallery = pd.gallery;
+    if (pd.adPopup) appData.adPopup = pd.adPopup;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    renderServices();
+    renderSchedule();
+    renderServiceSelect();
+    renderPrices();
+    renderGallery();
+    if (appData.logoUrl) {
+      document.getElementById('navLogo').src = appData.logoUrl;
+      document.getElementById('heroLogo').src = appData.logoUrl;
+      document.getElementById('footerLogo').src = appData.logoUrl;
+    }
+    const overlay = document.getElementById('popupOverlay');
+    if (overlay.classList.contains('open')) overlay.classList.remove('open');
+    showPopupIfNeeded();
+  }
+}, err => console.error('PUBLIC_SYNC_ERR', err));
 function getDefaultData() {
   return {
     services: [
       { id: 1, name: 'Corte de pelo', desc: 'Corte clásico o moderno adaptado a tu estilo', duration: '30 min', priceCarlos: 5, priceIker: 8, icon: '💇' },
-      { id: 2, name: 'Arreglo de barba', desc: 'Perfilado y definición de barba con navaja o máquina', duration: '20 min', priceCarlos: 3, priceIker: 0, icon: '🪒' },
-      { id: 3, name: 'Corte + Barba', desc: 'Pack completo: corte y arreglo de barba', duration: '50 min', priceCarlos: 7, priceIker: 0, icon: '💈' },
-      { id: 4, name: 'Cejas', desc: 'Perfilado y definición de cejas', duration: '10 min', priceCarlos: 0, priceIker: 2.5, icon: '🪒' },
-      { id: 5, name: 'Corte + Cejas', desc: 'Corte completo y perfilado de cejas', duration: '40 min', priceCarlos: 0, priceIker: 9.5, icon: '✂️' },
+      { id: 2, name: 'Arreglo de barba', desc: 'Perfilado y definición de barba con navaja o máquina', duration: '20 min', priceCarlos: 3, priceIker: 4, icon: '🪒' },
+      { id: 3, name: 'Corte + Barba', desc: 'Pack completo: corte y arreglo de barba', duration: '50 min', priceCarlos: 7, priceIker: 11, icon: '💈' },
+      { id: 4, name: 'Cejas', desc: 'Perfilado y definición de cejas', duration: '10 min', priceCarlos: 2.5, priceIker: 2.5, icon: '🪒' },
+      { id: 5, name: 'Corte + Cejas', desc: 'Corte completo y perfilado de cejas', duration: '40 min', priceCarlos: 7, priceIker: 9.5, icon: '✂️' },
       { id: 6, name: 'Servicio VIP', desc: 'Mascarilla facial, masaje craneal y serum capilar', duration: '30 min', priceCarlos: 0, priceIker: 12, icon: '⭐' },
     ],
     schedule: [
