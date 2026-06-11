@@ -938,7 +938,16 @@ function getDefaultData() {
     ],
   };
 }
-function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
+function getData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return getDefaultData();
+    const data = JSON.parse(raw);
+    const defaults = getDefaultData();
+    Object.keys(defaults).forEach(k => { if (!(k in data)) data[k] = defaults[k]; });
+    return data;
+  } catch { return getDefaultData(); }
+}
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
   if (fbReady) firebase.database().ref('cisa/data').set(appData);
