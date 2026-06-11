@@ -783,7 +783,7 @@ function loadAppData(snap) {
     if (val.appointments && typeof val.appointments === 'object' && !Array.isArray(val.appointments)) {
       val.appointments = Object.values(val.appointments);
     }
-    appData = val;
+    Object.assign(appData, val);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
   }
 }
@@ -941,20 +941,7 @@ function getDefaultData() {
 function getData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData(); } catch { return getDefaultData(); } }
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-  if (!fbReady) return;
-  const db = firebase.database();
-  db.ref('cisa/data/appointments').once('value').then(snap => {
-    if (snap.exists()) {
-      const remote = snap.val();
-      if (typeof remote === 'object' && !Array.isArray(remote)) {
-        const existingIds = new Set(appData.appointments.map(a => a.id));
-        Object.values(remote).forEach(a => {
-          if (a && !existingIds.has(a.id)) appData.appointments.push(a);
-        });
-      }
-    }
-    db.ref('cisa/data').set(appData);
-  }).catch(() => db.ref('cisa/data').set(appData));
+  if (fbReady) firebase.database().ref('cisa/data').set(appData);
 }
 function resetData() {
   if (!confirm('¿Restablecer todos los datos a valores por defecto? Se perderán las citas guardadas.')) return;
@@ -1305,21 +1292,8 @@ firebase.auth().onAuthStateChanged(user => {
     });
     db.ref('cisa/data').on('value', snap => {
       loadAppData(snap);
-      // Merge existing push-keyed appointments
-      db.ref('cisa/data/appointments').once('value', snap2 => {
-        if (snap2.exists()) {
-          const remote = snap2.val();
-          if (typeof remote === 'object' && !Array.isArray(remote)) {
-            const existingIds = new Set(appData.appointments.map(a => a.id));
-            Object.values(remote).forEach(a => {
-              if (a && !existingIds.has(a.id)) appData.appointments.push(a);
-            });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-          }
-        }
-        document.getElementById('loginError').classList.remove('show');
-        initAdmin();
-      });
+      document.getElementById('loginError').classList.remove('show');
+      initAdmin();
     });
   } else {
     fbReady = false;

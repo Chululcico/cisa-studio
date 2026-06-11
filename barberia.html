@@ -665,6 +665,22 @@ const firebaseConfig = {
   appId: "1:589097620111:web:5aca3de45d7dbfe32756fa"
 };
 firebase.initializeApp(firebaseConfig);
+// Sync appointments from other sessions (cross-browser slot blocking)
+firebase.database().ref('cisa/data/appointments').on('value', snap => {
+  if (snap.exists()) {
+    let remote = snap.val();
+    if (typeof remote === 'object' && !Array.isArray(remote)) remote = Object.values(remote);
+    const existingIds = new Set(appData.appointments.map(a => a.id));
+    let changed = false;
+    remote.forEach(a => {
+      if (a && !existingIds.has(a.id)) { appData.appointments.push(a); changed = true; }
+    });
+    if (changed) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      if (document.getElementById('dateInput').value) generateSlots();
+    }
+  }
+}, err => console.error('FIREBASE_SYNC_ERR', err));
 function getDefaultData() {
   return {
     services: [
@@ -866,7 +882,7 @@ function submitBooking() {
   };
   appData.appointments.push(appt);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-  try { firebase.database().ref('cisa/data/appointments').push(appt); } catch(e) {}
+  try { firebase.database().ref('cisa/data/appointments').push(appt); console.log('CITA_ENVIADA_FIREBASE', appt); } catch(e) { console.error('FIREBASE_ERROR', e); }
 
   document.getElementById('bookingFormInner').style.display = 'none';
   const succ = document.getElementById('bookingSuccess');
