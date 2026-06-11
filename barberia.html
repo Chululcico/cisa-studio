@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CISA · Barbería & Estilo</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://files.catbox.moe">
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -186,7 +187,7 @@ section { padding: 80px 24px; }
   border-radius: var(--radius);
 }
 .gallery-slide img, .gallery-slide video {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  width: 100%; height: 100%; object-fit: cover; display: block; background: #000;
 }
 .gallery-slide .gallery-vid-placeholder {
   width: 100%; height: 100%; background: var(--surface);
@@ -1080,25 +1081,74 @@ function renderGallery() {
   const track = document.getElementById('galleryTrack');
   const prev = getPrevIndex(galleryIndex);
   const next = getNextIndex(galleryIndex);
-  const slides = [
-    { i: prev, cls: 'side side-left', arrow: 'galleryPrev()', arrowDir: '‹', arrowCls: 'gallery-arrow-left' },
-    { i: galleryIndex, cls: 'active', arrow: null, arrowDir: null, arrowCls: null },
-    { i: next, cls: 'side side-right', arrow: 'galleryNext()', arrowDir: '›', arrowCls: 'gallery-arrow-right' },
-  ];
-  track.innerHTML = slides.map(s => {
-    const m = appData.gallery[s.i];
-    const badgeColor = m.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
-    const arrowHtml = s.arrow ? `<button class="gallery-arrow ${s.arrowCls}" onclick="event.stopPropagation();${s.arrow}">${s.arrowDir}</button>` : '';
-    let mediaHtml;
-    if (m.type === 'video' && s.cls === 'active') {
-      mediaHtml = `<video src="${m.src}" muted autoplay loop playsinline preload="auto"></video>`;
-    } else if (m.type === 'video') {
-      mediaHtml = `<div class="gallery-vid-placeholder"></div>`;
-    } else {
-      mediaHtml = `<img src="${m.src}" loading="lazy">`;
+  const positions = [prev, galleryIndex, next];
+  const classes = ['side side-left', 'active', 'side side-right'];
+  // Build 3 persistent slide slots once
+  if (!track.dataset.init) {
+    track.dataset.init = '1';
+    for (let i = 0; i < 3; i++) {
+      const slide = document.createElement('div');
+      slide.className = 'gallery-slide';
+      const inner = document.createElement('div');
+      inner.className = 'gallery-slide-inner';
+      slide.appendChild(inner);
+      if (i !== 1) {
+        const arrow = document.createElement('button');
+        arrow.className = 'gallery-arrow ' + (i === 0 ? 'gallery-arrow-left' : 'gallery-arrow-right');
+        arrow.textContent = i === 0 ? '‹' : '›';
+        arrow.onclick = function(e) { e.stopPropagation(); i === 0 ? galleryPrev() : galleryNext(); };
+        slide.appendChild(arrow);
+      }
+      track.appendChild(slide);
     }
-    return `<div class="gallery-slide ${s.cls}" style="border-color:${badgeColor}"><div class="gallery-slide-inner">${arrowHtml}${mediaHtml}</div></div>`;
-  }).join('');
+  }
+  const slides = track.children;
+  for (let i = 0; i < 3; i++) {
+    const slide = slides[i];
+    const m = appData.gallery[positions[i]];
+    const cls = classes[i];
+    slide.className = 'gallery-slide ' + cls;
+    slide.style.borderColor = m.barber === 'iker' ? '#C9A4D4' : '#F2B5C8';
+    const inner = slide.querySelector('.gallery-slide-inner');
+    let child = inner.firstElementChild;
+    if (m.type === 'video') {
+      if (!child || child.tagName !== 'VIDEO') {
+        const vid = document.createElement('video');
+        vid.muted = true; vid.loop = true; vid.playsInline = true;
+        vid.onerror = function() { this.outerHTML = '<div class=gallery-vid-placeholder></div>'; };
+        inner.innerHTML = '';
+        inner.appendChild(vid);
+        child = vid;
+      }
+      const vid = child;
+      if (vid.getAttribute('src') !== m.src) vid.src = m.src;
+      vid.preload = i === 1 ? 'auto' : 'metadata';
+      if (i === 1) {
+        vid.setAttribute('autoplay', '');
+        vid.currentTime = 0;
+        vid.play().catch(function() {});
+      } else {
+        vid.removeAttribute('autoplay');
+        vid.pause();
+      }
+    } else {
+      if (!child || child.tagName !== 'IMG') {
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        inner.innerHTML = '';
+        inner.appendChild(img);
+        child = img;
+      }
+      const img = child;
+      if (img.getAttribute('src') !== m.src) img.src = m.src;
+    }
+  }
+  // Preload next video when active can play
+  var activeVid = slides[1] ? slides[1].querySelector('video') : null;
+  if (activeVid) {
+    activeVid.removeEventListener('canplaythrough', preloadNext);
+    activeVid.addEventListener('canplaythrough', preloadNext);
+  }
   const active = appData.gallery[galleryIndex];
   const caption = document.getElementById('galleryCaption');
   if (caption) {
@@ -1108,6 +1158,17 @@ function renderGallery() {
     caption.style.color = col;
   }
   renderDots();
+}
+function preloadNext() {
+  var nextIdx = getNextIndex(galleryIndex);
+  var nextItem = appData.gallery[nextIdx];
+  if (nextItem && nextItem.type === 'video') {
+    var old = document.getElementById('gallery-prefetch');
+    if (old) old.remove();
+    var link = document.createElement('link');
+    link.rel = 'prefetch'; link.href = nextItem.src; link.as = 'video'; link.id = 'gallery-prefetch';
+    document.head.appendChild(link);
+  }
 }
 function getPrevIndex(i) { return i === 0 ? appData.gallery.length - 1 : i - 1; }
 function getNextIndex(i) { return i === appData.gallery.length - 1 ? 0 : i + 1; }
