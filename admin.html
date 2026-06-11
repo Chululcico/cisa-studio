@@ -1285,6 +1285,8 @@ firebase.auth().onAuthStateChanged(user => {
     fbReady = true;
     document.getElementById('codeOverlay').classList.add('hidden');
     document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('loginError').classList.remove('show');
+    initAdmin();
     const db = firebase.database();
     db.ref('cisa/config').on('value', snap => {
       loadConfig(snap);
@@ -1292,8 +1294,8 @@ firebase.auth().onAuthStateChanged(user => {
     });
     db.ref('cisa/data').on('value', snap => {
       loadAppData(snap);
-      document.getElementById('loginError').classList.remove('show');
-      initAdmin();
+      renderDashboard();
+      lucide.createIcons();
     });
   } else {
     fbReady = false;
