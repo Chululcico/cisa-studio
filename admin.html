@@ -383,6 +383,7 @@ select option { background: var(--surface); color: var(--text); }
     <div class="nav-item" onclick="showPage('multimedia', this)"><span class="nav-icon"><i data-lucide="image" width="16" height="16"></i></span><span>Multimedia</span></div>
     <div class="nav-item" onclick="showPage('anuncios', this)"><span class="nav-icon"><i data-lucide="megaphone" width="16" height="16"></i></span><span>Anuncios</span></div>
     <div class="nav-item" onclick="showPage('horarios', this)"><span class="nav-icon"><i data-lucide="clock" width="16" height="16"></i></span><span>Horarios</span></div>
+    <div class="nav-item" onclick="showPage('calendario', this)"><span class="nav-icon"><i data-lucide="calendar-x" width="16" height="16"></i></span><span>Calendario</span></div>
     <div class="nav-section">Sistema</div>
     <div class="nav-item" onclick="showPage('configuracion', this)"><span class="nav-icon"><i data-lucide="settings" width="16" height="16"></i></span><span>Configuración</span></div>
   </nav>
@@ -615,7 +616,6 @@ select option { background: var(--surface); color: var(--text); }
       <div class="card">
         <div class="card-header">
           <div class="card-title">Calendario</div>
-          <button class="btn btn-primary btn-sm" onclick="saveCalendar()">Guardar cambios</button>
         </div>
         <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:16px">Marca los días no disponibles para cada barbero. Los clientes no podrán reservar en esas fechas.</div>
         <div id="calendarEditor" style="display:flex;gap:24px;flex-wrap:wrap"></div>
@@ -1813,7 +1813,6 @@ function renderCalendarEditor() {
   var bNames = { carlos: 'Carlos', iker: 'Iker' };
   if (!calEditorMonths.carlos) { calEditorMonths.carlos = { y: now.getFullYear(), m: now.getMonth() }; }
   if (!calEditorMonths.iker) { calEditorMonths.iker = { y: now.getFullYear(), m: now.getMonth() }; }
-  var names = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
   var months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   var html = '';
   bKeys.forEach(function(key) {
@@ -1842,7 +1841,7 @@ function renderCalendarEditor() {
       if (isUnav) cls += ' unavailable';
       html += '<div class="cal-editor-day ' + cls + '" data-barber="' + key + '" data-date="' + ds + '" onclick="' + (isPast ? '' : 'toggleUnavailable(\'' + key + '\',\'' + ds + '\')') + '">' + d + '</div>';
     }
-    html += '</div></div>';
+    html += '</div><button class="btn btn-primary btn-sm" onclick="saveCalendar()" style="margin-top:12px;width:100%">Aplicar cambios en la web</button></div>';
   });
   document.getElementById('calendarEditor').innerHTML = html;
 }
@@ -1860,6 +1859,7 @@ function toggleUnavailable(key, ds) {
   var idx = arr.indexOf(ds);
   if (idx === -1) arr.push(ds); else arr.splice(idx, 1);
   appData.unavailable[key] = arr;
+  saveData();
   renderCalendarEditor();
 }
 
