@@ -15,6 +15,7 @@
 - `cisa/data/appointments` — Public read+write (push-keyed raw appointments from barberia)
 - `cisa/data/adPopup` — Public read, auth write (popup config synced to barberia across devices)
 - `cisa/data/public` — Public read, auth write (services, barbers, schedule, logoUrl, gallery, adPopup for cross-device sync)
+- `cisa/data/public/config` — Public read, auth write (color scheme + contact info for cross-device sync)
 
 ## Key patterns
 - Admin reads `cisa/data` (full snapshot), merges push-keyed appointments into array on each `value` event
@@ -24,6 +25,8 @@
 - `initAdmin()` called immediately after login auth (outside Firebase listeners) so page never blocks on DB
 - `saveData()` persists to both localStorage (`barberco_data`) and Firebase `cisa/data` + `cisa/data/public`
 - `pushConfig()` saves to both Firebase (`cisa/config`) and localStorage (`cisa_auth`) — barberia reads `cisa_auth` for colors + contact info
+- barberia.html listens to `cisa/data/public` on `value` — updates `appData`, re-renders all UI sections, updates logos, re-evaluates popup
+- barberia.html listens to `cisa/data/public/config` on `value` — applies colors + contact info in real time
 - barberia.html listens to `cisa/data/public` on `value` — updates `appData`, re-renders all UI sections, updates logos, re-evaluates popup
 
 ## Multimedia (admin Multimedia page)
@@ -35,8 +38,10 @@
 ## Color Scheme → Web
 - Admin selects a scheme card (visual preview only), then clicks "Aplicar cambios en la web"
 - `applySchemeToWeb()` calls `applyScheme()` (admin CSS) + `pushConfig()` (Firebase + localStorage)
-- barberia.html reads `cisa_auth` from localStorage on load and applies CSS variables
-- Contact info (address, phone, email) propagates the same way via `pushConfig()`
+- `pushConfig()` also writes to Firebase `cisa/data/public/config` for cross-device sync
+- barberia.html reads `cisa_auth` from localStorage on load and applies CSS variables via `applyConfig()`
+- barberia.html also listens to `cisa/data/public/config` via Firebase `on('value')` — applies colors + contact info in real time on all devices
+- Contact info (address, phone, email) propagates the same way
 
 ## Anuncios / Popup (admin Anuncios page)
 - **Popup** stored in `appData.adPopup` — enabled/disabled toggle

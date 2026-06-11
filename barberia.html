@@ -1217,49 +1217,52 @@ function renderPrices() {
 </script>
 <script>
 // Apply admin configuration (colors + contact info)
-(function() {
+function applyConfig(auth) {
+  if (!auth) return;
   try {
-    var auth = JSON.parse(localStorage.getItem('cisa_auth'));
-    if (auth) {
-      // Apply color scheme
-      if (auth.scheme) {
-        var schemeVars = {
-          cisa: { '--accent-1':'#F2B5C8','--accent-2':'#C9A4D4' },
-          midnight: { '--accent-1':'#5B8DEF','--accent-2':'#8B7EC8' },
-          emerald: { '--accent-1':'#6FCF97','--accent-2':'#5BC0BE' },
-          royal: { '--accent-1':'#C084FC','--accent-2':'#F472B6' },
-          carbon: { '--accent-1':'#58A6FF','--accent-2':'#8B949E' },
-          terra: { '--accent-1':'#E89F6C','--accent-2':'#C89B8B' },
-        };
-        var vars = schemeVars[auth.scheme];
-        if (vars) {
-          var root = document.documentElement.style;
-          root.setProperty('--accent-1', vars['--accent-1']);
-          root.setProperty('--accent-2', vars['--accent-2']);
-        }
-      }
-      // Apply contact info
-      if (auth.addressCarlos) {
-        var el = document.getElementById('contactAddressCarlos'); if (el) { el.textContent = auth.addressCarlos; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressCarlos + ' Elda'); }
-      }
-      if (auth.addressIker) {
-        var el = document.getElementById('contactAddressIker'); if (el) { el.textContent = auth.addressIker; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressIker + ' Elda'); }
-      }
-      if (auth.phoneCarlos) {
-        var el = document.getElementById('contactPhoneCarlos'); if (el) { el.textContent = formatPhone(auth.phoneCarlos); el.href = 'tel:' + auth.phoneCarlos; }
-      }
-      if (auth.phoneIker) {
-        var el = document.getElementById('contactPhoneIker'); if (el) { el.textContent = formatPhone(auth.phoneIker); el.href = 'tel:' + auth.phoneIker; }
-      }
-      if (auth.emailCarlos) {
-        var el = document.getElementById('contactEmailCarlos'); if (el) { var e = auth.emailCarlos.toLowerCase(); el.textContent = e; el.href = 'mailto:' + e; }
-      }
-      if (auth.emailIker) {
-        var el = document.getElementById('contactEmailIker'); if (el) { el.textContent = auth.emailIker; el.href = 'mailto:' + auth.emailIker; }
+    if (auth.scheme) {
+      var schemeVars = {
+        cisa: { '--accent-1':'#F2B5C8','--accent-2':'#C9A4D4' },
+        midnight: { '--accent-1':'#5B8DEF','--accent-2':'#8B7EC8' },
+        emerald: { '--accent-1':'#6FCF97','--accent-2':'#5BC0BE' },
+        royal: { '--accent-1':'#C084FC','--accent-2':'#F472B6' },
+        carbon: { '--accent-1':'#58A6FF','--accent-2':'#8B949E' },
+        terra: { '--accent-1':'#E89F6C','--accent-2':'#C89B8B' },
+      };
+      var vars = schemeVars[auth.scheme];
+      if (vars) {
+        var root = document.documentElement.style;
+        root.setProperty('--accent-1', vars['--accent-1']);
+        root.setProperty('--accent-2', vars['--accent-2']);
       }
     }
+    if (auth.addressCarlos) {
+      var el = document.getElementById('contactAddressCarlos'); if (el) { el.textContent = auth.addressCarlos; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressCarlos + ' Elda'); }
+    }
+    if (auth.addressIker) {
+      var el = document.getElementById('contactAddressIker'); if (el) { el.textContent = auth.addressIker; el.href = 'https://maps.google.com/?q=' + encodeURIComponent(auth.addressIker + ' Elda'); }
+    }
+    if (auth.phoneCarlos) {
+      var el = document.getElementById('contactPhoneCarlos'); if (el) { el.textContent = formatPhone(auth.phoneCarlos); el.href = 'tel:' + auth.phoneCarlos; }
+    }
+    if (auth.phoneIker) {
+      var el = document.getElementById('contactPhoneIker'); if (el) { el.textContent = formatPhone(auth.phoneIker); el.href = 'tel:' + auth.phoneIker; }
+    }
+    if (auth.emailCarlos) {
+      var el = document.getElementById('contactEmailCarlos'); if (el) { var e = auth.emailCarlos.toLowerCase(); el.textContent = e; el.href = 'mailto:' + e; }
+    }
+    if (auth.emailIker) {
+      var el = document.getElementById('contactEmailIker'); if (el) { el.textContent = auth.emailIker; el.href = 'mailto:' + auth.emailIker; }
+    }
   } catch(e) {}
-})();
+}
+// Apply from localStorage on page load
+var authRaw = localStorage.getItem('cisa_auth');
+if (authRaw) { try { applyConfig(JSON.parse(authRaw)); } catch(e) {} }
+// Listen for config changes from admin via Firebase
+firebase.database().ref('cisa/data/public/config').on('value', snap => {
+  if (snap.exists()) applyConfig(snap.val());
+}, err => console.error('CONFIG_SYNC_ERR', err));
 </script>
 </body>
 </html>

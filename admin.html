@@ -976,7 +976,10 @@ function pushData() {
 }
 function pushConfig() {
   localStorage.setItem('cisa_auth', JSON.stringify(authData));
-  if (fbReady) firebase.database().ref('cisa/config').set(authData);
+  if (fbReady) {
+    firebase.database().ref('cisa/config').set(authData);
+    firebase.database().ref('cisa/data/public/config').set(authData);
+  }
 }
 
 // ====== COLOR SCHEMES ======
@@ -1179,6 +1182,7 @@ function saveData() {
       logoUrl: appData.logoUrl,
       gallery: appData.gallery,
       adPopup: appData.adPopup,
+      config: authData,
     });
   }
 }
