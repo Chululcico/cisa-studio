@@ -541,7 +541,8 @@ select option { background: var(--surface); color: var(--text); }
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Color del texto</label>
-            <input class="form-input" id="popupTextColor" placeholder="#0A0A0A">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px" id="popupTextColorPalette"></div>
+            <input class="form-input" id="popupTextColor" placeholder="#0A0A0A" oninput="highlightTextColorSwatch()">
           </div>
           <div class="form-group">
             <label class="form-label">Forma / posición</label>
@@ -1509,6 +1510,7 @@ function saveLogoUrl() {
 }
 
 // ====== ANUNCIOS / POPUP ======
+const popupTextColors = ['#0A0A0A','#1C1C1E','#333333','#666666','#98989D','#F5F5F0','#FFFFFF','#FF2D55','#FF453A','#FFD60A','#34C759','#007AFF','#5856D6','#AF52DE','#FF9500'];
 const popupGradients = [
   { id:'pg-1', name:'Rosa a Morado', value:'linear-gradient(135deg, #F2B5C8, #C9A4D4)' },
   { id:'pg-2', name:'Naranja a Rosa', value:'linear-gradient(135deg, #FF9A9E, #FECFEF)' },
@@ -1537,6 +1539,7 @@ function renderPopupEditor() {
   const toggle = document.getElementById('popupToggleMain');
   toggle.classList.toggle('on', popup.enabled);
   renderPopupGradientPresets();
+  renderPopupTextColorPalette();
   lucide.createIcons();
 }
 function renderPopupGradientPresets() {
@@ -1552,6 +1555,29 @@ function selectPopupGradient(id) {
   document.getElementById('popupBgGradient').value = g.value;
   document.querySelectorAll('.popup-gradient-btn').forEach(el => {
     el.style.borderColor = el.dataset.gradId === id ? 'var(--accent-2)' : 'transparent';
+  });
+}
+function renderPopupTextColorPalette() {
+  const container = document.getElementById('popupTextColorPalette');
+  if (!container) return;
+  const current = document.getElementById('popupTextColor').value.trim().toLowerCase() || '#0a0a0a';
+  container.innerHTML = popupTextColors.map(c => `
+    <div class="text-color-swatch" onclick="selectTextColor('${c}')"
+      style="width:28px;height:28px;border-radius:50%;background:${c};cursor:pointer;border:2px solid ${c.toLowerCase() === current ? 'var(--accent-2)' : 'transparent'};transition:border 0.2s,transform 0.15s;box-sizing:content-box"
+      data-color="${c}" title="${c}"></div>`).join('');
+  container.querySelectorAll('.text-color-swatch').forEach(el => {
+    el.addEventListener('mouseenter', function() { if (this.style.borderColor !== 'var(--accent-2)') this.style.transform = 'scale(1.2)'; });
+    el.addEventListener('mouseleave', function() { this.style.transform = 'scale(1)'; });
+  });
+}
+function selectTextColor(color) {
+  document.getElementById('popupTextColor').value = color;
+  highlightTextColorSwatch();
+}
+function highlightTextColorSwatch() {
+  const current = document.getElementById('popupTextColor').value.trim().toLowerCase() || '#0a0a0a';
+  document.querySelectorAll('.text-color-swatch').forEach(el => {
+    el.style.borderColor = el.dataset.color.toLowerCase() === current ? 'var(--accent-2)' : 'transparent';
   });
 }
 function updatePopupImagePreview() {
