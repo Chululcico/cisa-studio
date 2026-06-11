@@ -427,6 +427,37 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   .gallery-slide.side-right { transform: translateX(90px); }
   .gallery-track { min-height: 220px; }
 }
+/* POPUP ANUNCIO */
+.popup-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: popupFadeIn 0.3s ease;
+}
+.popup-overlay.open { display: flex; }
+.popup-overlay.shape-bottom { align-items: flex-end; }
+.popup-overlay.shape-bottom .popup-card { border-radius: var(--radius) var(--radius) 0 0; margin:0; max-width:100%; width:100%; }
+.popup-overlay.shape-full { align-items: stretch; }
+.popup-overlay.shape-full .popup-card { border-radius:0; max-width:100%; width:100%; height:100%; max-height:100%; display:flex; flex-direction:column; justify-content:center; }
+.popup-card {
+  max-width: 400px; width: 90%; border-radius: var(--radius);
+  padding: 32px; text-align: center; position: relative;
+  box-shadow: var(--shadow-lg); margin-bottom: 40px;
+  animation: popupSlideIn 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.popup-close { position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.3rem; cursor:pointer; opacity:0.7; transition:opacity 0.2s; font-family:'Inter',sans-serif; line-height:1; }
+.popup-close:hover { opacity:1; }
+.popup-title { font-size:1.3rem; font-weight:700; margin-bottom:8px; line-height:1.3; }
+.popup-desc { font-size:0.85rem; line-height:1.6; margin-bottom:20px; }
+.popup-barber-card { display:flex; align-items:center; gap:12px; justify-content:center; margin-bottom:16px; }
+.popup-barber-img { width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.2); }
+.popup-barber-name { font-weight:600; font-size:0.9rem; }
+.popup-barber-price { font-size:0.85rem; opacity:0.8; }
+.popup-btn { display:inline-block; padding:12px 28px; border-radius:28px; font-weight:600; font-size:0.85rem; text-decoration:none; transition:opacity 0.2s, transform 0.2s; cursor:pointer; border:none; font-family:'Inter',sans-serif; }
+.popup-btn:hover { opacity:0.9; transform:scale(1.03); }
+@keyframes popupFadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes popupSlideIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 </style>
 
 <!-- BACKGROUND DECORATIVE -->
@@ -682,6 +713,16 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
   </div>
 </footer>
 
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-card" id="popupCard">
+    <button class="popup-close" id="popupCloseBtn" onclick="closePopup()">×</button>
+    <div class="popup-title" id="popupTitle2"></div>
+    <div class="popup-desc" id="popupDesc2"></div>
+    <div class="popup-barber-card" id="popupBarberCard2" style="display:none"></div>
+    <a class="popup-btn" id="popupBtn2" target="_top"></a>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -748,6 +789,20 @@ function getDefaultData() {
       { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
       { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
     ],
+    adPopup: {
+      enabled: false,
+      title: '🎉 Oferta especial',
+      description: 'Aprovecha nuestros nuevos precios. ¡Reserva ya tu cita!',
+      bgGradient: 'linear-gradient(135deg, #F2B5C8, #C9A4D4)',
+      textColor: '#0A0A0A',
+      buttonText: 'Reservar ahora',
+      buttonLink: '#citas',
+      shape: 'center',
+      showOnce: true,
+      showBarberCard: false,
+      barberCard: 'carlos',
+      price: 0,
+    },
   };
 }
 function getData() {
@@ -1058,7 +1113,43 @@ renderServiceSelect();
 renderPrices();
 renderGallery();
 initGallerySwipe();
+showPopupIfNeeded();
 lucide.createIcons();
+function showPopupIfNeeded() {
+  const popup = appData.adPopup;
+  if (!popup || !popup.enabled) return;
+  if (popup.showOnce && sessionStorage.getItem('popupShown')) return;
+  const overlay = document.getElementById('popupOverlay');
+  const card = document.getElementById('popupCard');
+  card.style.background = popup.bgGradient || 'linear-gradient(135deg, #F2B5C8, #C9A4D4)';
+  card.style.color = popup.textColor || '#0A0A0A';
+  document.getElementById('popupTitle2').textContent = popup.title || '';
+  document.getElementById('popupDesc2').textContent = popup.description || '';
+  const btnEl = document.getElementById('popupBtn2');
+  btnEl.textContent = popup.buttonText || 'Cerrar';
+  btnEl.href = popup.buttonLink || '#';
+  const btnBg = (popup.textColor || '#0A0A0A') === '#0A0A0A' ? '#FFFFFF' : '#0A0A0A';
+  btnEl.style.background = btnBg;
+  btnEl.style.color = (popup.textColor || '#0A0A0A') === '#0A0A0A' ? '#0A0A0A' : '#FFFFFF';
+  overlay.className = 'popup-overlay';
+  if (popup.shape && popup.shape !== 'center') overlay.classList.add('shape-' + popup.shape);
+  const barberEl = document.getElementById('popupBarberCard2');
+  if (popup.showBarberCard) {
+    const bData = appData.barbers?.find(x => x.id === popup.barberCard);
+    if (bData) {
+      barberEl.style.display = 'flex';
+      barberEl.innerHTML = `<img class="popup-barber-img" src="${bData.img}" alt="${bData.name}"><div><div class="popup-barber-name">${bData.name}</div>${popup.price ? '<div class="popup-barber-price">Desde ' + popup.price + '€</div>' : ''}</div>`;
+    }
+  } else {
+    barberEl.style.display = 'none';
+  }
+  if (popup.showOnce) sessionStorage.setItem('popupShown', '1');
+  overlay.classList.add('open');
+}
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('open');
+}
+document.getElementById('popupOverlay').addEventListener('click', function(e) { if (e.target === this) closePopup(); });
 function renderPrices() {
   ['carlos','iker'].forEach(b => {
     const el = document.getElementById('prices-' + b);

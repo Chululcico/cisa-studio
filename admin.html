@@ -357,6 +357,7 @@ select option { background: var(--surface); color: var(--text); }
     <div class="nav-item" onclick="showPage('barberos', this)"><span class="nav-icon"><i data-lucide="users" width="16" height="16"></i></span><span>Barberos</span></div>
     <div class="nav-item" onclick="showPage('servicios', this)"><span class="nav-icon"><i data-lucide="scissors" width="16" height="16"></i></span><span>Servicios</span></div>
     <div class="nav-item" onclick="showPage('multimedia', this)"><span class="nav-icon"><i data-lucide="image" width="16" height="16"></i></span><span>Multimedia</span></div>
+    <div class="nav-item" onclick="showPage('anuncios', this)"><span class="nav-icon"><i data-lucide="megaphone" width="16" height="16"></i></span><span>Anuncios</span></div>
     <div class="nav-item" onclick="showPage('horarios', this)"><span class="nav-icon"><i data-lucide="clock" width="16" height="16"></i></span><span>Horarios</span></div>
     <div class="nav-section">Sistema</div>
     <div class="nav-item" onclick="showPage('configuracion', this)"><span class="nav-icon"><i data-lucide="settings" width="16" height="16"></i></span><span>Configuración</span></div>
@@ -493,6 +494,92 @@ select option { background: var(--surface); color: var(--text); }
       </div>
     </div>
 
+    <!-- ANUNCIOS -->
+    <div class="page" id="page-anuncios">
+      <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="card-title" style="margin-bottom:4px">Popup de anuncio</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary)">Muestra un anuncio personalizado en la web al cargar la página.</div>
+        </div>
+        <label class="toggle" id="popupToggleMain" onclick="togglePopupEnabled()" style="flex-shrink:0"></label>
+      </div>
+      <div class="card" id="popupEditorCard">
+        <div class="card-header">
+          <div class="card-title">Personalizar anuncio</div>
+          <button class="btn btn-outline btn-sm" onclick="previewPopup()"><i data-lucide="eye" width="14" height="14"></i> Vista previa</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Título</label>
+            <input class="form-input" id="popupTitle" placeholder="🎉 Oferta especial">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-textarea" id="popupDesc" rows="2" placeholder="Describe tu oferta o anuncio…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Texto del botón</label>
+            <input class="form-input" id="popupBtnText" placeholder="Reservar ahora">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Enlace del botón</label>
+            <input class="form-input" id="popupBtnLink" placeholder="#citas">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fondo del anuncio</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px" id="popupGradientPresets"></div>
+          <input class="form-input" id="popupBgGradient" placeholder="linear-gradient(135deg, #F2B5C8, #C9A4D4)">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Color del texto</label>
+            <input class="form-input" id="popupTextColor" placeholder="#0A0A0A">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Forma / posición</label>
+            <select class="form-select" id="popupShape">
+              <option value="center">Centrado (modal)</option>
+              <option value="bottom">Inferior (bottom sheet)</option>
+              <option value="full">Pantalla completa</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label style="font-size:0.82rem;display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="popupShowOnce" checked> Mostrar solo una vez por sesión
+            </label>
+          </div>
+          <div class="form-group">
+            <label style="font-size:0.82rem;display:flex;align-items:center;gap:8px;cursor:pointer">
+              <input type="checkbox" id="popupShowBarber" onchange="document.getElementById('popupBarberSection').style.display=this.checked?'block':'none'"> Mostrar tarjeta de barbero
+            </label>
+          </div>
+        </div>
+        <div id="popupBarberSection" style="display:none">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Barbero destacado</label>
+              <select class="form-select" id="popupBarber">
+                <option value="carlos">Carlos</option>
+                <option value="iker">Iker</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Precio destacado (€)</label>
+              <input class="form-input" type="number" id="popupPrice" placeholder="5">
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;margin-top:12px">
+          <button class="btn btn-primary" onclick="savePopup()">Guardar anuncio</button>
+        </div>
+      </div>
+    </div>
+
     <!-- HORARIOS -->
     <div class="page" id="page-horarios">
       <div class="card">
@@ -581,8 +668,11 @@ select option { background: var(--surface); color: var(--text); }
 
       <div class="card settings-section">
         <div class="settings-section-title">Personalizar colores</div>
-        <div style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px">Selecciona una combinación de colores para el panel.</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px">Selecciona una combinación de colores para la web y el panel.</div>
         <div class="scheme-grid" id="schemeGrid"></div>
+        <div style="text-align:right;margin-top:12px">
+          <button class="btn btn-primary" onclick="applySchemeToWeb()">Aplicar cambios en la web</button>
+        </div>
       </div>
 
       <div class="card settings-section">
@@ -714,6 +804,18 @@ select option { background: var(--surface); color: var(--text); }
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('apptModal')">Cancelar</button>
       <button class="btn btn-primary" onclick="saveAppointment()">Guardar cita</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="popupPreviewOverlay">
+  <div class="modal" style="max-width:400px;padding:0;overflow:visible;background:transparent;border:none;box-shadow:none">
+    <div id="popupPreviewInner" style="border-radius:var(--radius);padding:32px;text-align:center;position:relative;overflow:hidden">
+      <button class="modal-close" onclick="closeModal('popupPreviewOverlay')" style="position:absolute;top:8px;right:12px;z-index:5;font-size:1.5rem">×</button>
+      <div id="popupPreviewTitle" style="font-size:1.3rem;font-weight:700;margin-bottom:8px;line-height:1.3"></div>
+      <div id="popupPreviewDesc" style="font-size:0.85rem;line-height:1.6;margin-bottom:20px"></div>
+      <div id="popupPreviewBarber" style="margin-bottom:16px"></div>
+      <a id="popupPreviewBtn" style="display:inline-block;padding:12px 28px;border-radius:28px;font-weight:600;font-size:0.85rem;text-decoration:none;cursor:default"></a>
     </div>
   </div>
 </div>
@@ -866,6 +968,7 @@ function pushData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
 }
 function pushConfig() {
+  localStorage.setItem('cisa_auth', JSON.stringify(authData));
   if (fbReady) firebase.database().ref('cisa/config').set(authData);
 }
 
@@ -893,10 +996,16 @@ function renderSchemePicker() {
     </div>`).join('');
 }
 function selectScheme(id) {
-  applyScheme(id);
   document.querySelectorAll('.scheme-card').forEach(el => el.classList.remove('active'));
   document.querySelector(`.scheme-card[onclick*="'${id}'"]`).classList.add('active');
-  showToast('Esquema de colores actualizado');
+  authData.scheme = id;
+  applyScheme(id);
+}
+function applySchemeToWeb() {
+  applyScheme(authData.scheme);
+  localStorage.setItem('cisa_auth', JSON.stringify(authData));
+  pushConfig();
+  showToast('Colores aplicados en la web ✓');
 }
 
 // ====== COMPANY SETTINGS ======
@@ -1025,6 +1134,19 @@ function getDefaultData() {
       { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
       { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
     ],
+    adPopup: {
+      enabled: false,
+      title: '🎉 Oferta especial',
+      description: 'Aprovecha nuestros nuevos precios. ¡Reserva ya tu cita!',
+      bgGradient: 'linear-gradient(135deg, #F2B5C8, #C9A4D4)',
+      textColor: '#0A0A0A',
+      buttonText: 'Reservar ahora',
+      buttonLink: '#citas',
+      shape: 'center',
+      showOnce: true,
+      showBarberCard: false,
+      barberCard: 'carlos',
+    },
   };
 }
 function getData() {
@@ -1065,12 +1187,13 @@ function showPage(id, el) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   if (el) el.classList.add('active');
-  const titles = { dashboard:'Dashboard', citas:'Citas', barberos:'Barberos', servicios:'Servicios', multimedia:'Multimedia', horarios:'Horarios', configuracion:'Configuración' };
+  const titles = { dashboard:'Dashboard', citas:'Citas', barberos:'Barberos', servicios:'Servicios', multimedia:'Multimedia', anuncios:'Anuncios', horarios:'Horarios', configuracion:'Configuración' };
   document.getElementById('topbarTitle').textContent = titles[id] || id;
   if (id === 'citas') renderAppointments();
   if (id === 'servicios') renderServicesTable();
   if (id === 'horarios') renderScheduleEditor();
   if (id === 'multimedia') renderMediaManager();
+  if (id === 'anuncios') renderPopupEditor();
   if (id === 'barberos') { renderBarberEdit(); renderPrices(); }
   if (id === 'dashboard') renderDashboard();
   if (id === 'configuracion') { renderUsers(); renderSchemePicker(); loadCompany(); }
@@ -1376,6 +1499,107 @@ function saveLogoUrl() {
   document.getElementById('logoPreview').src = url;
   saveData();
   showToast('Logo actualizado ✓');
+}
+
+// ====== ANUNCIOS / POPUP ======
+const popupGradients = [
+  { id:'pg-1', name:'Rosa a Morado', value:'linear-gradient(135deg, #F2B5C8, #C9A4D4)' },
+  { id:'pg-2', name:'Naranja a Rosa', value:'linear-gradient(135deg, #FF9A9E, #FECFEF)' },
+  { id:'pg-3', name:'Púrpura a Rosa', value:'linear-gradient(135deg, #C084FC, #F472B6)' },
+  { id:'pg-4', name:'Azul a Púrpura', value:'linear-gradient(135deg, #667EEA, #764BA2)' },
+  { id:'pg-5', name:'Verde Esmeralda', value:'linear-gradient(135deg, #11998E, #38EF7D)' },
+  { id:'pg-6', name:'Oscuro', value:'linear-gradient(135deg, #1A1A2E, #16213E)' },
+];
+function renderPopupEditor() {
+  appData = getData();
+  const popup = appData.adPopup || getDefaultData().adPopup;
+  document.getElementById('popupTitle').value = popup.title || '';
+  document.getElementById('popupDesc').value = popup.description || '';
+  document.getElementById('popupBtnText').value = popup.buttonText || '';
+  document.getElementById('popupBtnLink').value = popup.buttonLink || '';
+  document.getElementById('popupBgGradient').value = popup.bgGradient || '';
+  document.getElementById('popupTextColor').value = popup.textColor || '#0A0A0A';
+  document.getElementById('popupShape').value = popup.shape || 'center';
+  document.getElementById('popupShowOnce').checked = popup.showOnce !== false;
+  document.getElementById('popupShowBarber').checked = popup.showBarberCard || false;
+  document.getElementById('popupBarber').value = popup.barberCard || 'carlos';
+  document.getElementById('popupPrice').value = popup.price || '';
+  document.getElementById('popupBarberSection').style.display = popup.showBarberCard ? 'block' : 'none';
+  const toggle = document.getElementById('popupToggleMain');
+  toggle.classList.toggle('on', popup.enabled);
+  renderPopupGradientPresets();
+  lucide.createIcons();
+}
+function renderPopupGradientPresets() {
+  const container = document.getElementById('popupGradientPresets');
+  container.innerHTML = popupGradients.map(g => `
+    <div class="popup-gradient-btn" onclick="selectPopupGradient('${g.id}')"
+      style="width:36px;height:36px;border-radius:8px;background:${g.value};cursor:pointer;border:2px solid transparent;transition:border 0.2s"
+      title="${g.name}" data-grad-id="${g.id}"></div>`).join('');
+}
+function selectPopupGradient(id) {
+  const g = popupGradients.find(x => x.id === id);
+  if (!g) return;
+  document.getElementById('popupBgGradient').value = g.value;
+  document.querySelectorAll('.popup-gradient-btn').forEach(el => {
+    el.style.borderColor = el.dataset.gradId === id ? 'var(--accent-2)' : 'transparent';
+  });
+}
+function togglePopupEnabled() {
+  const toggle = document.getElementById('popupToggleMain');
+  toggle.classList.toggle('on');
+  appData.adPopup.enabled = toggle.classList.contains('on');
+}
+function savePopup() {
+  const popup = appData.adPopup || {};
+  popup.enabled = document.getElementById('popupToggleMain').classList.contains('on');
+  popup.title = document.getElementById('popupTitle').value.trim();
+  popup.description = document.getElementById('popupDesc').value.trim();
+  popup.buttonText = document.getElementById('popupBtnText').value.trim();
+  popup.buttonLink = document.getElementById('popupBtnLink').value.trim();
+  popup.bgGradient = document.getElementById('popupBgGradient').value.trim();
+  popup.textColor = document.getElementById('popupTextColor').value.trim();
+  popup.shape = document.getElementById('popupShape').value;
+  popup.showOnce = document.getElementById('popupShowOnce').checked;
+  popup.showBarberCard = document.getElementById('popupShowBarber').checked;
+  popup.barberCard = document.getElementById('popupBarber').value;
+  popup.price = parseFloat(document.getElementById('popupPrice').value) || 0;
+  appData.adPopup = popup;
+  saveData();
+  showToast('Anuncio guardado ✓');
+}
+function previewPopup() {
+  const title = document.getElementById('popupTitle').value.trim() || '🎉 Oferta especial';
+  const desc = document.getElementById('popupDesc').value.trim() || 'Descripción del anuncio';
+  const btnText = document.getElementById('popupBtnText').value.trim() || 'Reservar';
+  const bg = document.getElementById('popupBgGradient').value.trim() || popupGradients[0].value;
+  const textColor = document.getElementById('popupTextColor').value.trim() || '#0A0A0A';
+  const showBarber = document.getElementById('popupShowBarber').checked;
+  const barber = document.getElementById('popupBarber').value;
+  const price = parseFloat(document.getElementById('popupPrice').value) || 0;
+  const inner = document.getElementById('popupPreviewInner');
+  inner.style.background = bg;
+  inner.style.color = textColor;
+  document.getElementById('popupPreviewTitle').textContent = title;
+  document.getElementById('popupPreviewTitle').style.color = textColor;
+  document.getElementById('popupPreviewDesc').textContent = desc;
+  document.getElementById('popupPreviewDesc').style.color = textColor;
+  const barberEl = document.getElementById('popupPreviewBarber');
+  const barberData = appData.barbers?.find(x => x.id === barber);
+  if (showBarber && barberData) {
+    barberEl.style.display = 'block';
+    barberEl.innerHTML = `<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:8px">
+      <img src="${barberData.img}" style="width:40px;height:40px;border-radius:50%;object-fit:cover">
+      <div style="text-align:left"><strong>${barberData.name}</strong>${price ? `<br><span style="font-size:0.85rem">${price}€</span>` : ''}</div>
+    </div>`;
+  } else {
+    barberEl.style.display = 'none';
+  }
+  const btn = document.getElementById('popupPreviewBtn');
+  btn.textContent = btnText;
+  btn.style.background = textColor === '#0A0A0A' ? '#FFFFFF' : '#0A0A0A';
+  btn.style.color = textColor === '#0A0A0A' ? '#0A0A0A' : '#FFFFFF';
+  document.getElementById('popupPreviewOverlay').classList.add('open');
 }
 
 // ====== SCHEDULE ======
