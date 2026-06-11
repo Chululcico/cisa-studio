@@ -7,6 +7,11 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>CISA · Panel de Administración</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CISA Admin">
+<meta name="theme-color" content="#0A0A0A">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -254,11 +259,6 @@ select option { background: var(--surface); color: var(--text); }
 .svc-toggle { display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-tertiary);transition:all 0.2s }
 .svc-toggle.on { background:var(--gradient-subtle);color:var(--accent-2);border-color:var(--accent-2) }
 .svc-toggle:hover { opacity:0.7 }
-.barber-cal { margin-top:16px;padding-top:12px;border-top:1px solid var(--border) }
-.barber-cal .cal-editor-header { margin-bottom:6px }
-.barber-cal .cal-editor-grid { gap:1px }
-.barber-cal .cal-editor-day { font-size:0.65rem; border-radius:4px }
-
 /* CalendarEditor */
 .cal-editor-col { flex:1; min-width:280px }
 .cal-editor-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:8px }
@@ -470,8 +470,8 @@ select option { background: var(--surface); color: var(--text); }
       <div class="card" style="margin-top:12px">
         <div class="card-header"><div class="card-title">Precios por servicio</div></div>
         <div class="price-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-          <div><div style="color:#D4708A;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Carlos</div><div id="carlosPrices"></div><div id="cal-carlos" class="barber-cal"></div></div>
-          <div><div style="color:#A87DB8;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Iker</div><div id="ikerPrices"></div><div id="cal-iker" class="barber-cal"></div></div>
+          <div><div style="color:#D4708A;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Carlos</div><div id="carlosPrices"></div></div>
+          <div><div style="color:#A87DB8;font-size:0.75rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:12px">Iker</div><div id="ikerPrices"></div></div>
         </div>
         <div style="margin-top:16px;text-align:right">
           <button class="btn btn-primary" onclick="savePrices()">Guardar precios</button>
@@ -616,6 +616,7 @@ select option { background: var(--surface); color: var(--text); }
       <div class="card">
         <div class="card-header">
           <div class="card-title">Calendario</div>
+          <button class="btn btn-outline btn-sm" onclick="syncUnavailable()">Sincronizar ahora</button>
         </div>
         <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:16px">Marca los días no disponibles para cada barbero. Los clientes no podrán reservar en esas fechas.</div>
         <div id="calendarEditor" style="display:flex;gap:24px;flex-wrap:wrap"></div>
@@ -1229,7 +1230,7 @@ function saveData() {
       adPopup: appData.adPopup,
       unavailable: appData.unavailable,
       config: authData,
-    });
+    }).then(function() { console.log('SYNC_OK: public data saved'); }).catch(function(e) { console.error('SYNC_ERR:', e); });
   }
 }
 function resetData() {
@@ -1503,13 +1504,10 @@ function toggleSvcBarber(id, barber) {
   saveData(); renderServicesTable(); renderPrices();
 }
 
-// ====== BARBEROS (PRICES + CALENDAR) ======
-var _calState = { carlos: null, iker: null };
-function _calInit(k) { if (!_calState[k]) { var d = new Date(); _calState[k] = { y: d.getFullYear(), m: d.getMonth() }; } }
+// ====== BARBEROS (PRICES + ADD SERVICE) ======
 function renderPrices() {
   if (!appData) return;
   ['carlos','iker'].forEach(function(b) {
-    _calInit(b);
     var el = document.getElementById(b + 'Prices');
     if (!el) return;
     var items = (appData.services || []).filter(function(s) { return (b === 'carlos' ? s.priceCarlos : s.priceIker) > 0; });
@@ -1517,53 +1515,8 @@ function renderPrices() {
     items.forEach(function(s) { h += '<div class="price-group"><span style="font-size:0.85rem">' + svcIcon(s.id, 16) + ' ' + s.name + '</span><input type="number" class="form-input" id="price-' + b + '-' + s.id + '" value="' + (b === 'carlos' ? s.priceCarlos : s.priceIker) + '" style="width:80px;text-align:center"></div>'; });
     h += '<button class="btn btn-outline btn-sm" style="margin-top:8px;width:100%" onclick="addSvcForBarber(\'' + b + '\')">+ Añadir servicio para ' + (b === 'carlos' ? 'Carlos' : 'Iker') + '</button>';
     el.innerHTML = h;
-    _barberCalRender(b);
   });
   lucide.createIcons();
-}
-function _barberCalRender(k) {
-  _calInit(k);
-  var cm = _calState[k];
-  var months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  var el = document.getElementById('cal-' + k);
-  if (!el) return;
-  var ua = appData.unavailable[k] || [];
-  var h = '<div class="cal-editor-header">';
-  h += '<button class="cal-nav" onclick="_calNav(\'' + k + '\',-1)">‹</button>';
-  h += '<span class="cal-month-label" style="font-size:0.75rem">' + months[cm.m] + ' ' + cm.y + '</span>';
-  h += '<button class="cal-nav" onclick="_calNav(\'' + k + '\',1)">›</button>';
-  h += '</div><div style="font-size:0.6rem;color:var(--text-tertiary);margin-bottom:4px">Días no disponibles</div><div class="cal-editor-grid">';
-  ['Lu','Ma','Mi','Ju','Vi','Sá','Do'].forEach(function(d) { h += '<div class="cal-editor-dow">' + d + '</div>'; });
-  var first = new Date(cm.y, cm.m, 1);
-  var sd = (first.getDay() + 6) % 7;
-  var total = new Date(cm.y, cm.m + 1, 0).getDate();
-  var prev = new Date(cm.y, cm.m, 0).getDate();
-  var today = new Date().toISOString().split('T')[0];
-  for (var i = 0; i < sd; i++) { h += '<div class="cal-editor-day other-month">' + (prev - sd + 1 + i) + '</div>'; }
-  for (var d = 1; d <= total; d++) {
-    var ds = cm.y + '-' + (cm.m + 1).toString().padStart(2,'0') + '-' + d.toString().padStart(2,'0');
-    var past = ds < today;
-    var unav = ua.indexOf(ds) !== -1;
-    var cls = (past ? ' past' : '') + (unav ? ' unavailable' : '');
-    h += '<div class="cal-editor-day' + cls + '" data-date="' + ds + '" onclick="' + (past ? '' : '_calToggle(\'' + k + '\',\'' + ds + '\')') + '">' + d + '</div>';
-  }
-  h += '</div>';
-  el.innerHTML = h;
-}
-function _calNav(k, dir) {
-  var cm = _calState[k];
-  cm.m += dir;
-  if (cm.m < 0) { cm.m = 11; cm.y--; }
-  if (cm.m > 11) { cm.m = 0; cm.y++; }
-  _barberCalRender(k);
-}
-function _calToggle(k, ds) {
-  var arr = appData.unavailable[k] || [];
-  var idx = arr.indexOf(ds);
-  if (idx === -1) arr.push(ds); else arr.splice(idx, 1);
-  appData.unavailable[k] = arr;
-  saveData();
-  _barberCalRender(k);
 }
 function addSvcForBarber(barber) {
   var name = prompt('Nombre del servicio para ' + (barber === 'carlos' ? 'Carlos' : 'Iker') + ':');
@@ -1864,7 +1817,26 @@ function toggleUnavailable(key, ds) {
 }
 
 function saveCalendar() {
-  saveData(); showToast('Calendario guardado ✓');
+  saveData();
+  showToast('Calendario guardado ✓');
+}
+function syncUnavailable() {
+  if (!fbReady) { showToast('Firebase no conectado', true); return; }
+  var db = firebase.database();
+  var payload = {
+    services: appData.services,
+    barbers: appData.barbers,
+    schedule: appData.schedule,
+    logoUrl: appData.logoUrl,
+    gallery: appData.gallery,
+    adPopup: appData.adPopup,
+    unavailable: appData.unavailable,
+    config: authData,
+  };
+  console.log('SYNC_PAYLOAD_UNAV:', JSON.stringify(appData.unavailable));
+  db.ref('cisa/data/public').set(payload)
+    .then(function() { showToast('Sincronizado con la web ✓'); })
+    .catch(function(e) { console.error('SYNC_UNAV_ERR:', e); showToast('Error al sincronizar: ' + e.message, true); });
 }
 
 // ====== UTILS ======
@@ -1923,6 +1895,7 @@ firebase.auth().onAuthStateChanged(user => {
   }
 });
 
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(e) { console.log('SW:', e.message); });
 document.getElementById('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyCode(); });
 document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 document.getElementById('loginPass2').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
