@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CISA · Barbería & Estilo</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CISA Barbería">
+<meta name="theme-color" content="#0A0A0A">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://files.catbox.moe">
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -316,6 +321,7 @@ section { padding: 80px 24px; }
 .cal-day.selected { background: var(--gradient); color: #0A0A0A; font-weight: 700; }
 .cal-day.other-month { opacity: 0.2; cursor: default; pointer-events: none; }
 .cal-day.past { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+.cal-day.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; background: repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,69,58,0.15) 3px,rgba(255,69,58,0.15) 6px); }
 
 .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 14px; }
 .time-slot {
@@ -531,6 +537,8 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
             <span class="barber-tag">Corte clásico</span>
             <span class="barber-tag">Degradado</span>
             <span class="barber-tag">Barba</span>
+            <span class="barber-tag">Cejas</span>
+            <span class="barber-tag">Corte + Cejas</span>
           </div>
           <div class="barber-prices" id="prices-carlos"></div>
         </div>
@@ -543,6 +551,8 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
           <p class="barber-bio">Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.</p>
           <div class="barber-tags">
             <span class="barber-tag">Corte completo</span>
+            <span class="barber-tag">Barba</span>
+            <span class="barber-tag">Corte + Barba</span>
             <span class="barber-tag">Cejas</span>
             <span class="barber-tag">VIP</span>
           </div>
@@ -750,7 +760,16 @@ firebase.database().ref('cisa/data/appointments').on('value', snap => {
     });
     if (changed) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-      if (document.getElementById('dateInput').value) generateSlots();
+  const dateVal = document.getElementById('dateInput').value;
+  if (dateVal) {
+    if ((appData.unavailable[selectedBarber] || []).includes(dateVal)) {
+      document.getElementById('dateInput').value = '';
+      selectedTime = null;
+      updateDtLabel();
+      if (dtOpen) renderCalendar();
+    }
+    generateSlots();
+  }
     }
   }
 }, err => console.error('FIREBASE_SYNC_ERR', err));
@@ -774,12 +793,14 @@ firebase.database().ref('cisa/data/public').on('value', snap => {
     if (pd.logoUrl) appData.logoUrl = pd.logoUrl;
     if (pd.gallery) appData.gallery = pd.gallery;
     if (pd.adPopup) appData.adPopup = pd.adPopup;
+    if (pd.unavailable) { appData.unavailable = pd.unavailable; console.log('UNAV_SYNC:', pd.unavailable); }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     renderServices();
     renderSchedule();
     renderServiceSelect();
     renderPrices();
     renderGallery();
+    renderCalendar();
     if (appData.logoUrl) {
       document.getElementById('navLogo').src = appData.logoUrl;
       document.getElementById('heroLogo').src = appData.logoUrl;
@@ -826,6 +847,7 @@ function getDefaultData() {
       { type:'video', src:'https://files.catbox.moe/wpvqpm.mp4', barber:'carlos' },
       { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
     ],
+    unavailable: { carlos: [], iker: [] },
     adPopup: {
       enabled: false,
       title: '🎉 Oferta especial',
@@ -843,6 +865,7 @@ function getDefaultData() {
     },
   };
 }
+
 function getData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -960,8 +983,9 @@ function renderCalendar() {
     const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isPast = ds < today;
     const isSel = ds === selected;
-    const cls = [ds === today ? 'today' : '', isSel ? 'selected' : '', isPast ? 'past' : ''].filter(Boolean).join(' ');
-    html += `<div class="cal-day ${cls}" data-date="${ds}" onclick="${isPast ? '' : `selectDate('${ds}')`}">${d}</div>`;
+    const isUnav = selectedBarber && (appData.unavailable[selectedBarber] || []).includes(ds);
+    const cls = [ds === today ? 'today' : '', isSel ? 'selected' : '', isPast ? 'past' : '', isUnav ? 'unavailable' : ''].filter(Boolean).join(' ');
+    html += `<div class="cal-day ${cls}" data-date="${ds}" onclick="${isPast || isUnav ? '' : `selectDate('${ds}')`}">${d}</div>`;
   }
   grid.innerHTML = html;
 }
@@ -974,6 +998,7 @@ function changeMonth(d) {
 }
 
 function selectDate(dateStr) {
+  if (selectedBarber && (appData.unavailable[selectedBarber] || []).includes(dateStr)) return;
   document.getElementById('dateInput').value = dateStr;
   document.querySelectorAll('#calGrid .cal-day').forEach(el => el.classList.remove('selected'));
   const el = document.querySelector(`#calGrid .cal-day[data-date="${dateStr}"]`);
@@ -987,6 +1012,10 @@ function selectDate(dateStr) {
 function generateSlots() {
   const grid = document.getElementById('timeGrid');
   const date = document.getElementById('dateInput').value;
+  if (date && selectedBarber && (appData.unavailable[selectedBarber] || []).includes(date)) {
+    grid.innerHTML = '<div style="color:#FF453A;font-size:0.82rem;grid-column:1/-1;text-align:center;padding:12px">Barbero no disponible este día</div>';
+    return;
+  }
   const dayName = new Date(date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' });
   const schedRow = appData.schedule.find(r => r.day.toLowerCase() === dayName);
   if (schedRow && !schedRow.open) {
@@ -1019,6 +1048,7 @@ function submitBooking() {
   if (!selectedBarber) { showToast('Elige un barbero'); return; }
   if (!sid) { showToast('Selecciona un servicio'); return; }
   if (!date) { showToast('Elige un día en el calendario'); return; }
+  if ((appData.unavailable[selectedBarber] || []).includes(date)) { showToast('Fecha no disponible'); return; }
   if (!selectedTime) { showToast('Selecciona una hora'); return; }
   if (!name) { showToast('Introduce tu nombre'); return; }
 
@@ -1317,6 +1347,7 @@ function applyConfig(auth) {
     }
   } catch(e) {}
 }
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(e) { console.log('SW:', e.message); });
 // Apply from localStorage on page load
 var authRaw = localStorage.getItem('cisa_auth');
 if (authRaw) { try { applyConfig(JSON.parse(authRaw)); } catch(e) {} }
