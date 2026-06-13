@@ -985,6 +985,12 @@ const schemes = [
   { id:'royal', name:'Royal', badge:'Púrpura', colors:['#0E0A14','#C084FC','#F472B6'] },
   { id:'carbon', name:'Carbon', badge:'Gris azulado', colors:['#0D1117','#58A6FF','#8B949E'] },
   { id:'terra', name:'Terra', badge:'Terracota', colors:['#100C0A','#E89F6C','#C89B8B'] },
+  { id:'sunset', name:'Sunset', badge:'Naranja', colors:['#1A0A0A','#FF6B6B','#FFA07A'] },
+  { id:'ocean', name:'Ocean', badge:'Azul mar', colors:['#0A0E1A','#48C9B0','#5DADE2'] },
+  { id:'forest', name:'Forest', badge:'Bosque', colors:['#0A120A','#7DCEA0','#A3E4D7'] },
+  { id:'cherry', name:'Cherry', badge:'Cereza', colors:['#1A0A0E','#FF69B4','#FFB6C1'] },
+  { id:'slate', name:'Slate', badge:'Gris', colors:['#0D0D0F','#8B9DC3','#B0BEC5'] },
+  { id:'amber', name:'Amber', badge:'Ámbar', colors:['#1A140A','#FFB300','#FFD54F'] },
 ];
 
 const schemeVars = {
@@ -994,6 +1000,12 @@ const schemeVars = {
   royal: { '--accent-1':'#C084FC','--accent-2':'#F472B6' },
   carbon: { '--accent-1':'#58A6FF','--accent-2':'#8B949E' },
   terra: { '--accent-1':'#E89F6C','--accent-2':'#C89B8B' },
+  sunset: { '--accent-1':'#FF6B6B','--accent-2':'#FFA07A' },
+  ocean: { '--accent-1':'#48C9B0','--accent-2':'#5DADE2' },
+  forest: { '--accent-1':'#7DCEA0','--accent-2':'#A3E4D7' },
+  cherry: { '--accent-1':'#FF69B4','--accent-2':'#FFB6C1' },
+  slate: { '--accent-1':'#8B9DC3','--accent-2':'#B0BEC5' },
+  amber: { '--accent-1':'#FFB300','--accent-2':'#FFD54F' },
 };
 
 // ====== FIREBASE AUTH ======
@@ -1685,7 +1697,7 @@ function saveLogoUrl() {
 }
 
 // ====== ANUNCIOS / POPUP ======
-const popupTextColors = ['#0A0A0A','#1C1C1E','#333333','#666666','#98989D','#F5F5F0','#FFFFFF','#FF2D55','#FF453A','#FFD60A','#34C759','#007AFF','#5856D6','#AF52DE','#FF9500'];
+const popupTextColors = ['#0A0A0A','#1C1C1E','#333333','#666666','#98989D','#F5F5F0','#FFFFFF','#FF2D55','#FF453A','#FFD60A','#34C759','#007AFF','#5856D6','#AF52DE','#FF9500','#FF6B6B','#48C9B0','#7DCEA0','#FF69B4','#8B9DC3','#FFB300'];
 const popupGradients = [
   { id:'pg-1', name:'Rosa a Morado', value:'linear-gradient(135deg, #F2B5C8, #C9A4D4)' },
   { id:'pg-2', name:'Naranja a Rosa', value:'linear-gradient(135deg, #FF9A9E, #FECFEF)' },
@@ -1693,6 +1705,12 @@ const popupGradients = [
   { id:'pg-4', name:'Azul a Púrpura', value:'linear-gradient(135deg, #667EEA, #764BA2)' },
   { id:'pg-5', name:'Verde Esmeralda', value:'linear-gradient(135deg, #11998E, #38EF7D)' },
   { id:'pg-6', name:'Oscuro', value:'linear-gradient(135deg, #1A1A2E, #16213E)' },
+  { id:'pg-7', name:'Atardecer', value:'linear-gradient(135deg, #FF6B6B, #FFA07A)' },
+  { id:'pg-8', name:'Oceánico', value:'linear-gradient(135deg, #48C9B0, #5DADE2)' },
+  { id:'pg-9', name:'Bosque', value:'linear-gradient(135deg, #7DCEA0, #A3E4D7)' },
+  { id:'pg-10', name:'Cereza', value:'linear-gradient(135deg, #FF69B4, #FFB6C1)' },
+  { id:'pg-11', name:'Pizarra', value:'linear-gradient(135deg, #8B9DC3, #B0BEC5)' },
+  { id:'pg-12', name:'Ámbar', value:'linear-gradient(135deg, #FFB300, #FFD54F)' },
 ];
 function renderPopupEditor() {
   appData = getData();
