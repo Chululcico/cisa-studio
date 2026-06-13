@@ -518,12 +518,12 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
     <p class="section-desc">Dos profesionales, dos estilos, un mismo compromiso con la calidad.</p>
     <div class="barbers-grid">
       <div class="barber-card">
-        <img class="barber-img" src="https://i.postimg.cc/QNgF3jWm/c-1-0.jpg" alt="Carlos" loading="lazy">
+        <img class="barber-img" id="barberImg-carlos" src="https://i.postimg.cc/QNgF3jWm/c-1-0.jpg" alt="Carlos" loading="lazy">
         <div class="barber-body">
-          <div class="barber-name">Carlos</div>
-          <div class="barber-role">Barbero — Con Curso</div>
-          <p class="barber-bio">Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.</p>
-          <div class="barber-tags">
+          <div class="barber-name" id="barberName-carlos">Carlos</div>
+          <div class="barber-role" id="barberRole-carlos">Barbero — Con Curso</div>
+          <p class="barber-bio" id="barberBio-carlos">Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.</p>
+          <div class="barber-tags" id="barberTags-carlos">
             <span class="barber-tag">Corte clásico</span>
             <span class="barber-tag">Degradado</span>
             <span class="barber-tag">Barba</span>
@@ -534,12 +534,12 @@ footer { background: rgba(5,5,5,0.95); padding: 48px 24px 24px; border-top: 1px 
         </div>
       </div>
       <div class="barber-card">
-        <img class="barber-img" src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=700&q=80" alt="Iker" loading="lazy">
+        <img class="barber-img" id="barberImg-iker" src="https://i.postimg.cc/2887Chm8/perfil-iker.jpg" alt="Iker" loading="lazy">
         <div class="barber-body">
-          <div class="barber-name">Iker</div>
-          <div class="barber-role">Barbero — Estilo Completo</div>
-          <p class="barber-bio">Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.</p>
-          <div class="barber-tags">
+          <div class="barber-name" id="barberName-iker">Iker</div>
+          <div class="barber-role" id="barberRole-iker">Barbero — Estilo Completo</div>
+          <p class="barber-bio" id="barberBio-iker">Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.</p>
+          <div class="barber-tags" id="barberTags-iker">
             <span class="barber-tag">Corte completo</span>
             <span class="barber-tag">Barba</span>
             <span class="barber-tag">Corte + Barba</span>
@@ -796,6 +796,7 @@ firebase.database().ref('cisa/data/public').on('value', snap => {
     if (pd.unavailable) { appData.unavailable = pd.unavailable; console.log('UNAV_SYNC:', pd.unavailable); }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     renderServices();
+    renderBarbers();
     renderSchedule();
     renderServiceSelect();
     renderPrices();
@@ -848,6 +849,10 @@ function getDefaultData() {
       { type:'video', src:'https://files.catbox.moe/ft1vug.mp4', barber:'iker' },
     ],
     unavailable: { carlos: [], iker: [] },
+    barbers: [
+      { id:'carlos', name:'Carlos', role:'Barbero — Con Curso', bio:'Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.', tags:['Corte clásico','Degradado','Barba','Cejas','Corte + Cejas'], color1:'#D4708A', color2:'#F2B5C8', img:'https://i.postimg.cc/QNgF3jWm/c-1-0.jpg' },
+      { id:'iker', name:'Iker', role:'Barbero — Estilo Completo', bio:'Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.', tags:['Corte completo','Barba','Corte + Barba','Cejas','VIP'], color1:'#A87DB8', color2:'#C9A4D4', img:'https://i.postimg.cc/2887Chm8/perfil-iker.jpg' },
+    ],
     adPopup: {
       enabled: false,
       title: '🎉 Oferta especial',
@@ -891,6 +896,21 @@ function renderServices() {
       <div class="service-name">${s.name}</div>
       <p class="service-desc">${s.desc}</p>
     </div>`).join('');
+}
+function renderBarbers() {
+  if (!appData.barbers) return;
+  appData.barbers.forEach(b => {
+    const imgEl = document.getElementById('barberImg-' + b.id);
+    if (imgEl) imgEl.src = b.img;
+    const nameEl = document.getElementById('barberName-' + b.id);
+    if (nameEl) nameEl.textContent = b.name;
+    const roleEl = document.getElementById('barberRole-' + b.id);
+    if (roleEl) roleEl.textContent = b.role;
+    const bioEl = document.getElementById('barberBio-' + b.id);
+    if (bioEl) bioEl.textContent = b.bio;
+    const tagsEl = document.getElementById('barberTags-' + b.id);
+    if (tagsEl) tagsEl.innerHTML = (b.tags || []).map(t => `<span class="barber-tag">${t}</span>`).join('');
+  });
 }
 
 function renderSchedule() {
@@ -1236,6 +1256,7 @@ if (appData.logoUrl) {
   document.getElementById('footerLogo').src = appData.logoUrl;
 }
 renderServices();
+renderBarbers();
 renderSchedule();
 renderServiceSelect();
 renderPrices();
@@ -1279,10 +1300,12 @@ function showPopupIfNeeded() {
   if (popup.shape && popup.shape !== 'center') overlay.classList.add('shape-' + popup.shape);
   const barberEl = document.getElementById('popupBarberCard2');
   if (popup.showBarberCard) {
-    const bData = appData.barbers?.find(x => x.id === popup.barberCard);
-    if (bData) {
+    const barbersList = popup.barberCard === 'both' ? appData.barbers || [] : appData.barbers?.filter(x => x.id === popup.barberCard);
+    if (barbersList.length) {
       barberEl.style.display = 'flex';
-      barberEl.innerHTML = `<img class="popup-barber-img" src="${bData.img}" alt="${bData.name}"><div><div class="popup-barber-name">${bData.name}</div>${popup.price ? '<div class="popup-barber-price">Desde ' + popup.price + '€</div>' : ''}</div>`;
+      barberEl.style.flexDirection = barbersList.length > 1 ? 'column' : '';
+      barberEl.style.gap = barbersList.length > 1 ? '6px' : '';
+      barberEl.innerHTML = barbersList.map(b => `<div style="display:flex;align-items:center;gap:8px"><img class="popup-barber-img" src="${b.img}" alt="${b.name}"><div><div class="popup-barber-name">${b.name}</div>${popup.price ? '<div class="popup-barber-price">Desde ' + popup.price + '€</div>' : ''}</div></div>`).join('');
     }
   } else {
     barberEl.style.display = 'none';
