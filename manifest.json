@@ -13,6 +13,13 @@
   "theme_color": "#0A0A0A",
   "orientation": "portrait",
   "categories": ["business", "utilities"],
+  "launch_handler": { "client_mode": "focus-existing" },
+  "edge_side_panel": { "preferred_width": 400 },
+  "shortcuts": [
+    { "name": "Citas", "short_name": "Citas", "url": "admin.html#citas" },
+    { "name": "Barberos", "short_name": "Barberos", "url": "admin.html#barberos" },
+    { "name": "Calendario", "short_name": "Calendario", "url": "admin.html#calendario" }
+  ],
   "icons": [
     {
       "src": "https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png",
