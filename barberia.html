@@ -1293,6 +1293,7 @@ function showPopupIfNeeded() {
   const btnEl = document.getElementById('popupBtn2');
   btnEl.textContent = popup.buttonText || 'Cerrar';
   btnEl.href = popup.buttonLink || '#';
+  btnEl.onclick = closePopup;
   const btnBg = (popup.textColor || '#0A0A0A') === '#0A0A0A' ? '#FFFFFF' : '#0A0A0A';
   btnEl.style.background = btnBg;
   btnEl.style.color = (popup.textColor || '#0A0A0A') === '#0A0A0A' ? '#0A0A0A' : '#FFFFFF';
