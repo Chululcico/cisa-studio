@@ -276,29 +276,30 @@ select option { background: var(--surface); color: var(--text); }
 /* Mobile app-style bottom tab bar */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%; height: calc(64px + env(safe-area-inset-bottom, 0)); bottom: 0; top: auto; left: 0; right: 0;
+    width: 100%; height: 62px; bottom: 0; top: auto; left: 0; right: 0;
     flex-direction: row; border-right: none; border-top: 1px solid var(--border);
-    position: fixed; padding: 0 0 env(safe-area-inset-bottom, 0); z-index: 100;
-    background: rgba(20,20,20,0.92); backdrop-filter: blur(16px);
+    position: fixed; padding: 0; z-index: 100;
+    background: rgba(20,20,20,0.96); backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-sizing: content-box;
   }
   .sidebar-logo, .sidebar-logo-text, .sidebar-footer, .nav-section { display: none !important; }
   .sidebar-nav {
-    display: flex; flex-direction: row; overflow-x: auto; padding: 0;
-    flex: 1; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    justify-content: space-around;
+    display: flex; flex-direction: row; padding: 0; flex: 1;
+    justify-content: space-evenly; overflow: visible; min-width: 0;
   }
-  .sidebar-nav::-webkit-scrollbar { display: none; }
   .nav-item {
-    flex: 1 0 0; min-width: 0; flex-direction: column; padding: 4px 2px;
-    gap: 1px; border-left: none; border-top: 2px solid transparent;
-    justify-content: center; align-items: center; font-size: 0.5rem;
-    min-height: 56px; text-align: center; line-height: 1.1;
+    flex: 0 1 0; flex-direction: column; padding: 3px 1px; gap: 0;
+    border-left: none; border-top: 2px solid transparent;
+    justify-content: center; align-items: center; font-size: 0.45rem;
+    min-height: 56px; min-width: 0; text-align: center; line-height: 1.1;
+    overflow: hidden;
   }
   .nav-item.active { border-left-color: transparent; border-top-color: var(--accent-2); }
-  .nav-item span:not(.nav-icon) { display: block; font-size: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; margin-top: 1px; }
-  .nav-icon { font-size: 1.1rem; width: auto; }
-  .main { margin-left: 0; padding-bottom: calc(72px + env(safe-area-inset-bottom, 0)); }
+  .nav-item span:not(.nav-icon) { display: block; font-size: 0.45rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; margin-top: 1px; }
+  .nav-icon { font-size: 1rem; width: auto; }
+  .main { margin-left: 0; padding-bottom: calc(70px + env(safe-area-inset-bottom, 0)); }
   .content { padding: 12px; }
   .topbar { padding: 0 12px; height: 44px; }
   .topbar-title { font-size: 0.85rem; }
@@ -346,13 +347,16 @@ select option { background: var(--surface); color: var(--text); }
   .barber-dash-stat { padding: 6px; }
   .barber-dash-stat-val { font-size: 1rem; }
   #popupEditorCard .form-row { grid-template-columns: 1fr; }
+  /* Citas per-barber cards on mobile */
+  .citas-barber-section { margin-bottom: 16px; }
+  .citas-barber-section:last-child { margin-bottom: 0; }
 }
 @media (max-width: 480px) {
-  .sidebar { height: calc(56px + env(safe-area-inset-bottom, 0)); }
-  .nav-item { padding: 3px 2px; min-height: 48px; }
-  .nav-icon { font-size: 0.95rem; }
-  .nav-item span:not(.nav-icon) { font-size: 0.45rem; }
-  .main { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0)); }
+  .sidebar { height: 54px; }
+  .nav-item { padding: 2px 1px; min-height: 46px; }
+  .nav-icon { font-size: 0.85rem; }
+  .nav-item span:not(.nav-icon) { font-size: 0.4rem; }
+  .main { padding-bottom: calc(62px + env(safe-area-inset-bottom, 0)); }
   .content { padding: 8px; }
   .stats-grid { grid-template-columns: 1fr; gap: 6px; }
   .scheme-grid { grid-template-columns: 1fr; }
@@ -485,30 +489,65 @@ select option { background: var(--surface); color: var(--text); }
 
     <!-- CITAS -->
     <div class="page" id="page-citas">
-      <div class="filter-bar">
-        <div style="position:relative;min-width:160px"><i data-lucide="search" width="14" height="14" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none"></i><input type="text" id="searchAppt" placeholder="Buscar por nombre…" oninput="renderAppointments()" style="width:100%;padding-left:30px"></div>
-        <select id="filterBarber" onchange="renderAppointments()">
-          <option value="">Todos los barberos</option>
-          <option value="carlos">Carlos</option>
-          <option value="iker">Iker</option>
-        </select>
-        <select id="filterStatus" onchange="renderAppointments()">
-          <option value="">Todos los estados</option>
-          <option value="confirmed">Confirmadas</option>
-          <option value="pending">Pendientes</option>
-          <option value="cancelled">Canceladas</option>
-        </select>
-        <input type="date" id="filterDate" onchange="renderAppointments()" style="width:140px">
-        <button class="btn btn-primary btn-sm" onclick="openNewApptModal()">+ Nueva cita</button>
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;justify-content:space-between">
+        <div style="position:relative;flex:1;max-width:320px"><i data-lucide="search" width="14" height="14" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none"></i><input type="text" id="searchAppt" placeholder="Buscar cliente o teléfono…" oninput="renderAppointments()" style="width:100%;padding-left:30px"></div>
+        <button class="btn btn-primary btn-sm" onclick="openNewApptModal()">+ Nueva</button>
       </div>
-      <div class="card" style="padding:0">
+      <!-- CARLOS -->
+      <div class="card citas-barber-section" style="overflow:hidden">
+        <div style="background:linear-gradient(135deg,rgba(212,112,138,0.08),transparent);padding:16px 20px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-weight:700;font-size:0.9rem;color:#D4708A">Carlos</span>
+              <span class="badge badge-carlos" id="carlosCount">0</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              <select id="filterStatusCarlos" onchange="renderAppointments()" style="padding:4px 8px;font-size:0.72rem;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:inherit">
+                <option value="">Todos</option>
+                <option value="confirmed">Confirmadas</option>
+                <option value="pending">Pendientes</option>
+                <option value="cancelled">Canceladas</option>
+              </select>
+              <input type="date" id="filterDateCarlos" onchange="renderAppointments()" style="padding:4px 8px;font-size:0.72rem;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:inherit;width:130px">
+            </div>
+          </div>
+        </div>
         <div class="table-wrap">
           <table>
             <thead><tr>
-              <th>Cliente</th><th>Barbero</th><th>Servicio</th>
+              <th>Cliente</th><th>Servicio</th>
               <th>Fecha</th><th>Hora</th><th>Precio</th><th>Estado</th><th>Acciones</th>
             </tr></thead>
-            <tbody id="apptTable"></tbody>
+            <tbody id="apptTableCarlos"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- IKER -->
+      <div class="card citas-barber-section" style="overflow:hidden">
+        <div style="background:linear-gradient(135deg,rgba(168,125,184,0.08),transparent);padding:16px 20px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-weight:700;font-size:0.9rem;color:#A87DB8">Iker</span>
+              <span class="badge badge-iker" id="ikerCount">0</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              <select id="filterStatusIker" onchange="renderAppointments()" style="padding:4px 8px;font-size:0.72rem;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:inherit">
+                <option value="">Todos</option>
+                <option value="confirmed">Confirmadas</option>
+                <option value="pending">Pendientes</option>
+                <option value="cancelled">Canceladas</option>
+              </select>
+              <input type="date" id="filterDateIker" onchange="renderAppointments()" style="padding:4px 8px;font-size:0.72rem;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;font-family:inherit;width:130px">
+            </div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Cliente</th><th>Servicio</th>
+              <th>Fecha</th><th>Hora</th><th>Precio</th><th>Estado</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="apptTableIker"></tbody>
           </table>
         </div>
       </div>
@@ -1397,20 +1436,27 @@ function changeMonth(d) { calMonth += d; if (calMonth < 0) { calMonth = 11; calY
 function renderAppointments() {
   appData = getData();
   const search = document.getElementById('searchAppt')?.value.toLowerCase() || '';
-  const barber = document.getElementById('filterBarber')?.value || '';
-  const status = document.getElementById('filterStatus')?.value || '';
-  const date = document.getElementById('filterDate')?.value || '';
   let list = appData.appointments.slice().sort((a,b) => (b.date+b.time).localeCompare(a.date+a.time));
   if (search) list = list.filter(a => a.name?.toLowerCase().includes(search) || a.phone?.includes(search));
-  if (barber) list = list.filter(a => a.barber === barber);
+  renderBarberAppts('carlos', list, 'Carlos', '#D4708A');
+  renderBarberAppts('iker', list, 'Iker', '#A87DB8');
+  lucide.createIcons();
+}
+function renderBarberAppts(barberId, allList, barberName, color) {
+  const status = document.getElementById('filterStatus' + barberName)?.value || '';
+  const date = document.getElementById('filterDate' + barberName)?.value || '';
+  let list = allList.filter(a => a.barber === barberId);
   if (status) list = list.filter(a => a.status === status);
   if (date) list = list.filter(a => a.date === date);
-  const tbody = document.getElementById('apptTable');
-  if (!list.length) { tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"><i data-lucide="calendar" width="24" height="24"></i></div>No hay citas</div></td></tr>`; lucide.createIcons(); return; }
+  document.getElementById(barberId + 'Count').textContent = list.length;
+  const tbody = document.getElementById('apptTable' + barberName);
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon"><i data-lucide="calendar" width="24" height="24"></i></div>No hay citas</div></td></tr>`;
+    return;
+  }
   tbody.innerHTML = list.map(a => `
     <tr>
       <td><strong>${a.name}</strong>${a.phone ? `<br><span style="font-size:0.72rem;color:var(--text-tertiary)">${a.phone}</span>` : ''}</td>
-      <td><span class="badge badge-${a.barber}">${a.barber==='carlos'?'Carlos':'Iker'}</span></td>
       <td>${a.service}</td>
       <td>${formatDate(a.date)}</td>
       <td>${a.time}</td>
@@ -1425,7 +1471,6 @@ function renderAppointments() {
         <button class="btn btn-danger btn-sm" onclick="deleteAppt(${a.id})"><i data-lucide="trash-2" width="14" height="14"></i></button>
       </td>
     </tr>`).join('');
-  lucide.createIcons();
 }
 function changeApptStatus(id, status) { const a = appData.appointments.find(x => x.id === id); if (a) { a.status = status; saveData(); showToast('Estado actualizado'); } }
 function deleteAppt(id) { if (!confirm('¿Eliminar esta cita?')) return; appData.appointments = appData.appointments.filter(a => a.id !== id); saveData(); renderAppointments(); showToast('Cita eliminada'); }
