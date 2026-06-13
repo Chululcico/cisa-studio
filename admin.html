@@ -273,7 +273,98 @@ select option { background: var(--surface); color: var(--text); }
 .cal-editor-day.unavailable { background:rgba(255,69,58,0.15); color:#FF453A; border-color:rgba(255,69,58,0.3); text-decoration:line-through }
 .cal-editor-day.unavailable:hover { background:rgba(255,69,58,0.25) }
 .cal-editor-day.past { opacity:0.3; pointer-events:none }
-@media (max-width: 900px) {
+/* Mobile app-style bottom tab bar */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%; height: calc(64px + env(safe-area-inset-bottom, 0)); bottom: 0; top: auto; left: 0; right: 0;
+    flex-direction: row; border-right: none; border-top: 1px solid var(--border);
+    position: fixed; padding: 0 0 env(safe-area-inset-bottom, 0); z-index: 100;
+    background: rgba(20,20,20,0.92); backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .sidebar-logo, .sidebar-logo-text, .sidebar-footer, .nav-section { display: none !important; }
+  .sidebar-nav {
+    display: flex; flex-direction: row; overflow-x: auto; padding: 0;
+    flex: 1; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    justify-content: space-around;
+  }
+  .sidebar-nav::-webkit-scrollbar { display: none; }
+  .nav-item {
+    flex: 1 0 0; min-width: 0; flex-direction: column; padding: 4px 2px;
+    gap: 1px; border-left: none; border-top: 2px solid transparent;
+    justify-content: center; align-items: center; font-size: 0.5rem;
+    min-height: 56px; text-align: center; line-height: 1.1;
+  }
+  .nav-item.active { border-left-color: transparent; border-top-color: var(--accent-2); }
+  .nav-item span:not(.nav-icon) { display: block; font-size: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; margin-top: 1px; }
+  .nav-icon { font-size: 1.1rem; width: auto; }
+  .main { margin-left: 0; padding-bottom: calc(72px + env(safe-area-inset-bottom, 0)); }
+  .content { padding: 12px; }
+  .topbar { padding: 0 12px; height: 44px; }
+  .topbar-title { font-size: 0.85rem; }
+  .topbar-badge { display: none; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-val { font-size: 1.3rem; }
+  .dash-grid { grid-template-columns: 1fr; }
+  .barber-dash-grid { grid-template-columns: 1fr; }
+  .table-wrap { overflow-x: auto; }
+  .table-wrap table { min-width: 500px; }
+  .modal {
+    max-width: 100%; margin: 0; padding: 24px 20px calc(16px + env(safe-area-inset-bottom, 0));
+    max-height: 85vh; border-radius: 16px 16px 0 0; border-bottom: none;
+    position: fixed; bottom: 0; left: 0; right: 0; overflow-y: auto;
+  }
+  .modal-overlay { align-items: flex-end; }
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-bar input, .filter-bar select { width: 100%; min-height: 44px; }
+  .filter-bar > div { min-width: 0 !important; width: 100%; }
+  .filter-bar > div input { width: 100%; }
+  .schedule-row { grid-template-columns: 70px 1fr; gap: 4px; padding: 8px 0; }
+  .schedule-row .schedule-day { grid-column: 1; }
+  .schedule-row .toggle { grid-column: 2; justify-self: end; }
+  .schedule-row input { font-size: 0.7rem; padding: 6px 8px; grid-column: 1 / -1; }
+  .barber-edit-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .scheme-grid { grid-template-columns: 1fr 1fr; }
+  .price-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .cal-editor-col { min-width: 100%; }
+  #calendarEditor { flex-direction: column; }
+  .btn, .btn-sm { min-height: 44px; padding: 10px 18px; }
+  .form-input, .form-select, .form-textarea { min-height: 44px; font-size: 16px; }
+  .nav-item { min-height: 44px; }
+  .toggle { width: 44px; height: 24px; }
+  .toggle::after { width: 20px; height: 20px; }
+  .toggle.on::after { left: 22px; }
+  .upcoming-item { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .upcoming-time { text-align: left; }
+  input[type="checkbox"] { width: 20px; height: 20px; }
+  .gallery-edit-row { flex-direction: column; align-items: stretch !important; }
+  .code-box, .login-box { max-width: 100%; margin: 0 12px; padding: 24px; }
+  #popupPreviewOverlay > .modal { max-width: 100% !important; }
+  .barber-dash-stats { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .barber-dash-stat { padding: 6px; }
+  .barber-dash-stat-val { font-size: 1rem; }
+  #popupEditorCard .form-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .sidebar { height: calc(56px + env(safe-area-inset-bottom, 0)); }
+  .nav-item { padding: 3px 2px; min-height: 48px; }
+  .nav-icon { font-size: 0.95rem; }
+  .nav-item span:not(.nav-icon) { font-size: 0.45rem; }
+  .main { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0)); }
+  .content { padding: 8px; }
+  .stats-grid { grid-template-columns: 1fr; gap: 6px; }
+  .scheme-grid { grid-template-columns: 1fr; }
+  .stat-card { padding: 10px; }
+  .stat-val { font-size: 1.1rem; }
+  .card { padding: 10px; }
+  .topbar { height: 40px; padding: 0 8px; }
+  .topbar-title { font-size: 0.78rem; }
+  .modal { padding: 20px 16px calc(12px + env(safe-area-inset-bottom, 0)); }
+}
+/* Keep sidebar collapse for tablet (769-900px) */
+@media (min-width: 769px) and (max-width: 900px) {
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .dash-grid { grid-template-columns: 1fr; }
   .barber-dash-grid { grid-template-columns: 1fr; }
@@ -294,47 +385,6 @@ select option { background: var(--surface); color: var(--text); }
   .table-wrap table { min-width: 600px; }
   .schedule-row { grid-template-columns: 80px 1fr 1fr 44px; gap: 6px; }
   .schedule-row input { font-size: 0.75rem; }
-}
-@media (max-width: 600px) {
-  .stats-grid { grid-template-columns: 1fr; }
-  .scheme-grid { grid-template-columns: 1fr; }
-  .sidebar { width: 48px; }
-  .main { margin-left: 48px; }
-  .content { padding: 12px; }
-  .stat-card { padding: 14px; }
-  .card { padding: 14px; }
-  .modal { max-width: 100%; margin: 12px; padding: 20px; max-height: 85vh; }
-  .topbar-title { font-size: 0.85rem; }
-  .topbar-badge { padding: 3px 10px; font-size: 0.65rem; }
-  .filter-bar { flex-direction: column; align-items: stretch; }
-  .filter-bar input, .filter-bar select { width: 100%; }
-  .filter-bar > div { min-width: 0 !important; width: 100%; }
-  .filter-bar > div input { width: 100%; }
-  .schedule-row { grid-template-columns: 70px 1fr; gap: 4px; padding: 8px 0; }
-  .schedule-row .schedule-day { grid-column: 1; }
-  .schedule-row .toggle { grid-column: 2; justify-self: end; }
-  .schedule-row input { font-size: 0.7rem; padding: 6px 8px; grid-column: 1 / -1; }
-  .nav-item { padding: 8px; }
-  .sidebar-logo img { height: 20px; }
-  .stat-val { font-size: 1.5rem; }
-  .upcoming-item { flex-direction: column; align-items: flex-start; gap: 4px; }
-  .upcoming-time { text-align: left; }
-  .barber-dash-stats { grid-template-columns: repeat(3, 1fr); gap: 4px; }
-  .barber-dash-stat { padding: 6px; }
-  .barber-dash-stat-val { font-size: 1rem; }
-  .price-grid { grid-template-columns: 1fr !important; }
-}
-@media (max-width: 380px) {
-  .sidebar { width: 40px; }
-  .main { margin-left: 40px; }
-  .nav-item { padding: 6px; }
-  .content { padding: 8px; }
-  .topbar { padding: 0 8px; }
-  .topbar-title { font-size: 0.75rem; }
-  .stat-card { padding: 10px; }
-  .stat-val { font-size: 1.2rem; }
-  .card { padding: 10px; }
-  .stats-grid { gap: 6px; }
 } 
 </style>
 </head>
@@ -822,15 +872,11 @@ select option { background: var(--surface); color: var(--text); }
       <div class="form-group">
         <label class="form-label">Hora</label>
         <select class="form-select" id="appt-time">
-          <option value="09:00">09:00</option><option value="09:30">09:30</option>
-          <option value="10:00">10:00</option><option value="10:30">10:30</option>
-          <option value="11:00">11:00</option><option value="11:30">11:30</option>
-          <option value="12:00">12:00</option><option value="12:30">12:30</option>
-          <option value="13:00">13:00</option><option value="13:30">13:30</option>
-          <option value="16:00">16:00</option><option value="16:30">16:30</option>
-          <option value="17:00">17:00</option><option value="17:30">17:30</option>
-          <option value="18:00">18:00</option><option value="18:30">18:30</option>
-          <option value="19:00">19:00</option><option value="19:30">19:30</option>
+          <option value="09:00">09:00</option><option value="10:00">10:00</option>
+          <option value="11:00">11:00</option><option value="12:00">12:00</option>
+          <option value="13:00">13:00</option><option value="16:00">16:00</option>
+          <option value="17:00">17:00</option><option value="18:00">18:00</option>
+          <option value="19:00">19:00</option><option value="20:00">20:00</option>
         </select>
       </div>
     </div>
