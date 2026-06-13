@@ -1281,15 +1281,15 @@ function showPopupIfNeeded() {
     imgContainer = document.createElement('div');
     imgContainer.id = 'popupImgContainer2';
     imgContainer.style.cssText = 'margin-bottom:16px;display:none';
-    var img = document.createElement('img');
-    img.id = 'popupImg2';
-    img.style.cssText = 'max-width:100%;max-height:180px;border-radius:8px;object-fit:cover';
-    imgContainer.appendChild(img);
     descEl.parentNode.insertBefore(imgContainer, descEl);
   }
-  var imgEl = document.getElementById('popupImg2');
-  if (popup.imageUrl) { imgContainer.style.display = 'block'; imgEl.src = popup.imageUrl; }
-  else { imgContainer.style.display = 'none'; }
+  if (popup.imageUrl) {
+    imgContainer.style.display = 'block';
+    var isVid = /\.(mp4|webm|ogg|mov)(\?|$)/i.test(popup.imageUrl) || popup.imageUrl.includes('video');
+    imgContainer.innerHTML = isVid
+      ? '<video src="' + popup.imageUrl.replace(/"/g,'&quot;') + '" style="max-width:100%;max-height:180px;border-radius:8px;background:var(--bg)" controls preload="metadata"></video>'
+      : '<img src="' + popup.imageUrl.replace(/"/g,'&quot;') + '" style="max-width:100%;max-height:180px;border-radius:8px;object-fit:cover" onerror="this.style.display=\'none\'">';
+  } else { imgContainer.style.display = 'none'; }
   const btnEl = document.getElementById('popupBtn2');
   btnEl.textContent = popup.buttonText || 'Cerrar';
   btnEl.href = popup.buttonLink || '#';
