@@ -595,6 +595,7 @@ select option { background: var(--surface); color: var(--text); }
           <div style="flex:1;min-width:200px">
             <input class="form-input" id="mediaLogoUrl" placeholder="URL del logo">
           </div>
+          <button class="btn btn-outline btn-sm" onclick="previewLogoUrl()"><i data-lucide="eye" width="14" height="14"></i> Vista</button>
           <button class="btn btn-primary" onclick="saveLogoUrl()">Guardar logo</button>
         </div>
       </div>
@@ -961,6 +962,14 @@ select option { background: var(--surface); color: var(--text); }
   </div>
 </div>
 
+<div class="modal-overlay" id="mediaPreviewOverlay" onclick="if(event.target===this)closeModal('mediaPreviewOverlay')">
+  <div class="modal" style="max-width:520px;text-align:center">
+    <button class="modal-close" onclick="closeModal('mediaPreviewOverlay')">×</button>
+    <div id="mediaPreviewLabel" style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:10px"></div>
+    <div id="mediaPreviewContent" style="display:flex;align-items:center;justify-content:center;background:#000;border-radius:var(--radius-sm);overflow:hidden;margin:0 auto"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1226,8 +1235,10 @@ function renderBarberEdit() {
       </div>
       <div class="form-group">
         <label class="form-label">URL de imagen</label>
-        <input class="form-input" id="b-img-${b.id}" value="${b.img}" oninput="updateBarberImgPreview('${b.id}')">
-        <div id="b-img-preview-${b.id}" style="margin-top:6px"><img src="${b.img}" style="max-width:100%;max-height:80px;border-radius:6px;border:1px solid var(--border);background:var(--bg)" onerror="this.style.display='none'"></div>
+        <div style="display:flex;gap:8px">
+          <input class="form-input" id="b-img-${b.id}" value="${b.img}" style="flex:1">
+          <button class="btn btn-outline btn-sm" onclick="previewBarberImg('${b.id}')" style="flex-shrink:0">Vista previa</button>
+        </div>
       </div>
     </div>`).join('');
   document.querySelectorAll('.barber-edit-card').forEach((card, i) => {
@@ -1247,18 +1258,29 @@ function saveBarber(id) {
   b.color1 = document.getElementById(`b-color1-${id}`).value || b.color1;
   b.color2 = document.getElementById(`b-color2-${id}`).value || b.color2;
   b.img = document.getElementById(`b-img-${id}`).value.trim() || b.img;
-  updateBarberImgPreview(id);
   saveData(); showToast(`${b.name} actualizado ✓`);
 }
-function updateBarberImgPreview(id) {
+function previewBarberImg(id) {
   const url = document.getElementById(`b-img-${id}`).value.trim();
-  const container = document.getElementById(`b-img-preview-${id}`);
-  if (!container) return;
-  if (url) {
-    container.innerHTML = `<img src="${url}" style="max-width:100%;max-height:80px;border-radius:6px;border:1px solid var(--border);background:var(--bg)" onerror="this.style.display='none'">`;
+  if (!url) { showToast('Introduce una URL de imagen primero', true); return; }
+  previewMedia(url, 'image', 'Vista en web (barberos · 280px de alto):', 280, 280);
+}
+function previewMedia(src, type, label, maxW, maxH) {
+  document.getElementById('mediaPreviewLabel').textContent = label;
+  const content = document.getElementById('mediaPreviewContent');
+  if (type === 'video') {
+    content.innerHTML = `<video src="${src.replace(/"/g,'&quot;')}" style="max-width:${maxW}px;max-height:${maxH}px;width:100%;height:auto" controls autoplay preload="metadata"></video>`;
   } else {
-    container.innerHTML = `<div style="padding:16px;text-align:center;color:var(--text-tertiary);border:1px dashed var(--border);border-radius:6px;font-size:0.8rem">Sin imagen</div>`;
+    content.innerHTML = `<img src="${src.replace(/"/g,'&quot;')}" style="max-width:${maxW}px;max-height:${maxH}px;width:auto;height:auto;object-fit:contain" onerror="this.parentElement.innerHTML='<div style=padding:40px;color:var(--text-tertiary);font-size:0.85rem>Error al cargar la imagen</div>'">`;
   }
+  document.getElementById('mediaPreviewOverlay').classList.add('open');
+}
+function previewGalleryItem(idx) {
+  const type = document.getElementById(`gal-type-${idx}`).value;
+  const src = document.getElementById(`gal-src-${idx}`).value.trim();
+  if (!src) { showToast('Introduce una URL primero', true); return; }
+  const label = type === 'video' ? 'Vista en web (carrusel · 360x400):' : 'Vista en web (carrusel · 360x400):';
+  previewMedia(src, type, label, 360, 400);
 }
 
 // ====== MAIN DATA ======
@@ -1666,18 +1688,18 @@ function renderMediaManager() {
   if (!appData.gallery) appData.gallery = getDefaultData().gallery;
   container.innerHTML = appData.gallery.map((item, idx) => `
     <div class="gallery-edit-row" style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
-      <select class="form-select" id="gal-type-${idx}" style="width:90px;flex-shrink:0" onchange="updateGalleryPreview(${idx})">
+      <select class="form-select" id="gal-type-${idx}" style="width:90px;flex-shrink:0">
         <option value="image" ${item.type==='image'?'selected':''}>Imagen</option>
         <option value="video" ${item.type==='video'?'selected':''}>Vídeo</option>
       </select>
-      <input class="form-input" id="gal-src-${idx}" value="${item.src}" placeholder="URL del archivo" style="flex:1;min-width:160px" oninput="updateGalleryPreview(${idx})">
+      <input class="form-input" id="gal-src-${idx}" value="${item.src}" placeholder="URL del archivo" style="flex:1;min-width:160px">
       <select class="form-select" id="gal-barber-${idx}" style="width:100px;flex-shrink:0">
         <option value="carlos" ${item.barber==='carlos'?'selected':''}>Carlos</option>
         <option value="iker" ${item.barber==='iker'?'selected':''}>Iker</option>
       </select>
+      <button class="btn btn-outline btn-sm" onclick="previewGalleryItem(${idx})" style="flex-shrink:0"><i data-lucide="eye" width="14" height="14"></i></button>
       <button class="btn btn-danger btn-sm" onclick="removeGalleryItem(${idx})" style="flex-shrink:0"><i data-lucide="trash-2" width="14" height="14"></i></button>
-    </div>
-    <div id="gal-preview-${idx}" style="margin:4px 0 6px 2px;min-height:0">${item.src ? (item.type==='video' ? '<video src="'+item.src+'" style="max-width:100%;max-height:100px;border-radius:6px;border:1px solid var(--border);background:var(--bg)" controls preload="metadata"></video>' : '<img src="'+item.src+'" style="max-width:100%;max-height:100px;border-radius:6px;border:1px solid var(--border);background:var(--bg)" onerror="this.style.display=\'none\'">') : ''}</div>`).join('');
+    </div>`).join('');
   lucide.createIcons();
 }
 function addGalleryItem() {
@@ -1688,18 +1710,6 @@ function addGalleryItem() {
 function removeGalleryItem(idx) {
   appData.gallery.splice(idx, 1);
   renderMediaManager();
-}
-function updateGalleryPreview(idx) {
-  const type = document.getElementById(`gal-type-${idx}`).value;
-  const src = document.getElementById(`gal-src-${idx}`).value.trim();
-  const preview = document.getElementById(`gal-preview-${idx}`);
-  if (!preview) return;
-  if (!src) { preview.innerHTML = ''; return; }
-  if (type === 'video') {
-    preview.innerHTML = `<video src="${src.replace(/"/g,'&quot;')}" style="max-width:100%;max-height:100px;border-radius:6px;border:1px solid var(--border);background:var(--bg)" controls preload="metadata"></video>`;
-  } else {
-    preview.innerHTML = `<img src="${src.replace(/"/g,'&quot;')}" style="max-width:100%;max-height:100px;border-radius:6px;border:1px solid var(--border);background:var(--bg)" onerror="this.style.display='none'">`;
-  }
 }
 function saveGallery() {
   if (!appData.gallery) appData.gallery = [];
@@ -1720,6 +1730,11 @@ function saveLogoUrl() {
   document.getElementById('logoPreview').src = url;
   saveData();
   showToast('Logo actualizado ✓');
+}
+function previewLogoUrl() {
+  const url = document.getElementById('mediaLogoUrl').value.trim();
+  if (!url) { showToast('Introduce una URL de logo primero', true); return; }
+  previewMedia(url, 'image', 'Vista en web (hero · tamaño adaptable):', 400, 300);
 }
 
 // ====== ANUNCIOS / POPUP ======
