@@ -7,6 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>CISA · Panel de Administración</title>
+<script>if (!location.search) { var u = new URL(location.href); u.searchParams.set('v', Date.now()); location.replace(u.href); }</script>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -815,7 +816,7 @@ select option { background: var(--surface); color: var(--text); }
       <div class="card settings-section">
         <div class="settings-section-title">Acerca de</div>
         <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7">
-          <strong>CISA Admin v2.0</strong><br>
+          <strong>CISA Admin <span id="aboutVersion">v2.0</span></strong><br>
           Sistema de gestión para barbería.<br>
           Desarrollado por <a href="https://instagram.com/diegooaacosta" target="_blank" style="color:var(--accent-2);text-decoration:none">Diego Acosta</a><br><br>
           © 2026 CISA. Todos los derechos reservados.
@@ -828,7 +829,11 @@ select option { background: var(--surface); color: var(--text); }
         <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7">
           Si los cambios no se reflejan tras guardar, fuerza una recarga limpia del panel.
         </div>
-        <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="location.search='v='+Date.now()">Forzar recarga (sin caché)</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn btn-outline btn-sm" onclick="checkVersion()">Comprobar versión</button>
+          <button class="btn btn-outline btn-sm" onclick="location.search='v='+Date.now()">Forzar recarga (sin caché)</button>
+        </div>
+        <div id="versionInfo" style="margin-top:8px;font-size:0.78rem;color:var(--text-tertiary)">Versión actual: <strong id="versionNum"></strong></div>
       </div>
     </div>
 
@@ -974,6 +979,7 @@ select option { background: var(--surface); color: var(--text); }
 
 <script>
 const STORAGE_KEY = 'barberco_data';
+const APP_VERSION = '2.0.1';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpzYwf72NeVXCx983zpCblveCgPEHCNBY",
@@ -1373,6 +1379,24 @@ function resetData() {
   localStorage.removeItem(STORAGE_KEY);
   if (fbReady) firebase.database().ref('cisa/data').remove();
   location.reload();
+}
+function checkVersion() {
+  var info = document.getElementById('versionInfo');
+  info.textContent = 'Comprobando...';
+  info.style.color = 'var(--text-tertiary)';
+  fetch('admin.html?v=' + Date.now()).then(function(r) { return r.text(); }).then(function(html) {
+    var m = html.match(/const APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+    if (m && m[1] !== APP_VERSION) {
+      info.innerHTML = 'Nueva versión disponible: <strong>' + m[1] + '</strong> (actual: ' + APP_VERSION + '). <a href="#" onclick="location.search=\'v=\'+Date.now();return false" style="color:var(--accent-2)">Recargar ahora</a>';
+      info.style.color = 'var(--warning)';
+    } else {
+      info.textContent = 'Ya tienes la última versión (' + APP_VERSION + ') ✓';
+      info.style.color = 'var(--success)';
+    }
+  }).catch(function() {
+    info.textContent = 'Error al comprobar la versión';
+    info.style.color = 'var(--danger)';
+  });
 }
 
 function svcIcon(id, size) {
@@ -2076,6 +2100,8 @@ function closeSidebar() {
 
 function initAdmin() {
   document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+  document.getElementById('aboutVersion').textContent = 'v' + APP_VERSION;
+  document.getElementById('versionNum').textContent = APP_VERSION;
   if (appData.logoUrl) document.getElementById('sidebarLogo').src = appData.logoUrl;
   renderDashboard();
   lucide.createIcons();

@@ -322,6 +322,7 @@ section { padding: 80px 24px; }
 .cal-day.other-month { opacity: 0.2; cursor: default; pointer-events: none; }
 .cal-day.past { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
 .cal-day.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; background: repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,69,58,0.15) 3px,rgba(255,69,58,0.15) 6px); }
+.cal-day.fully-booked { opacity: 0.3; cursor: not-allowed; pointer-events: none; background: repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,149,0,0.2) 3px,rgba(255,149,0,0.2) 6px); }
 
 .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 14px; }
 .time-slot {
@@ -944,6 +945,7 @@ function selectBarber(barber) {
   renderServiceSelect();
   updatePrice();
   updateDtLabel();
+  if (dtOpen) renderCalendar();
   if (document.getElementById('dateInput').value) generateSlots();
 }
 
@@ -1004,8 +1006,9 @@ function renderCalendar() {
     const isPast = ds < today;
     const isSel = ds === selected;
     const isUnav = selectedBarber && (appData.unavailable[selectedBarber] || []).includes(ds);
-    const cls = [ds === today ? 'today' : '', isSel ? 'selected' : '', isPast ? 'past' : '', isUnav ? 'unavailable' : ''].filter(Boolean).join(' ');
-    html += `<div class="cal-day ${cls}" data-date="${ds}" onclick="${isPast || isUnav ? '' : `selectDate('${ds}')`}">${d}</div>`;
+    const isFull = selectedBarber && !isPast && !isUnav && (appData.appointments.filter(a => a.barber === selectedBarber && a.date === ds).length >= 12);
+    const cls = [ds === today ? 'today' : '', isSel ? 'selected' : '', isPast ? 'past' : '', isUnav ? 'unavailable' : '', isFull ? 'fully-booked' : ''].filter(Boolean).join(' ');
+    html += `<div class="cal-day ${cls}" data-date="${ds}" onclick="${isPast || isUnav || isFull ? '' : `selectDate('${ds}')`}">${d}</div>`;
   }
   grid.innerHTML = html;
 }
@@ -1019,6 +1022,7 @@ function changeMonth(d) {
 
 function selectDate(dateStr) {
   if (selectedBarber && (appData.unavailable[selectedBarber] || []).includes(dateStr)) return;
+  if (selectedBarber && appData.appointments.filter(a => a.barber === selectedBarber && a.date === dateStr).length >= 12) { showToast('No quedan horas disponibles este día'); return; }
   document.getElementById('dateInput').value = dateStr;
   document.querySelectorAll('#calGrid .cal-day').forEach(el => el.classList.remove('selected'));
   const el = document.querySelector(`#calGrid .cal-day[data-date="${dateStr}"]`);
@@ -1034,6 +1038,10 @@ function generateSlots() {
   const date = document.getElementById('dateInput').value;
   if (date && selectedBarber && (appData.unavailable[selectedBarber] || []).includes(date)) {
     grid.innerHTML = '<div style="color:#FF453A;font-size:0.82rem;grid-column:1/-1;text-align:center;padding:12px">Barbero no disponible este día</div>';
+    return;
+  }
+  if (date && selectedBarber && appData.appointments.filter(a => a.barber === selectedBarber && a.date === date).length >= 12) {
+    grid.innerHTML = '<div style="color:#FF9500;font-size:0.82rem;grid-column:1/-1;text-align:center;padding:12px">No quedan horas disponibles este día</div>';
     return;
   }
   const dayName = new Date(date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' });
@@ -1069,6 +1077,7 @@ function submitBooking() {
   if (!sid) { showToast('Selecciona un servicio'); return; }
   if (!date) { showToast('Elige un día en el calendario'); return; }
   if ((appData.unavailable[selectedBarber] || []).includes(date)) { showToast('Fecha no disponible'); return; }
+  if (appData.appointments.filter(a => a.barber === selectedBarber && a.date === date).length >= 12) { showToast('No quedan horas disponibles este día'); return; }
   if (!selectedTime) { showToast('Selecciona una hora'); return; }
   if (!name) { showToast('Introduce tu nombre'); return; }
 
