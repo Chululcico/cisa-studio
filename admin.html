@@ -689,6 +689,7 @@ select option { background: var(--surface); color: var(--text); }
               <select class="form-select" id="popupBarber">
                 <option value="carlos">Carlos</option>
                 <option value="iker">Iker</option>
+                <option value="both">Ambos</option>
               </select>
             </div>
             <div class="form-group">
@@ -1188,7 +1189,7 @@ function renderBarberEdit() {
   if (!appData.barbers) {
     appData.barbers = [
       { id:'carlos', name:'Carlos', role:'Barbero — Con Curso', bio:'Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.', tags:['Corte clásico','Degradado','Barba','Cejas','Corte + Cejas'], color1:'#D4708A', color2:'#F2B5C8', img:'https://i.postimg.cc/QNgF3jWm/c-1-0.jpg' },
-      { id:'iker', name:'Iker', role:'Barbero — Estilo Completo', bio:'Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.', tags:['Corte completo','Barba','Corte + Barba','Cejas','VIP'], color1:'#A87DB8', color2:'#C9A4D4', img:'https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=700&q=80' },
+      { id:'iker', name:'Iker', role:'Barbero — Estilo Completo', bio:'Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.', tags:['Corte completo','Barba','Corte + Barba','Cejas','VIP'], color1:'#A87DB8', color2:'#C9A4D4', img:'https://i.postimg.cc/2887Chm8/perfil-iker.jpg' },
     ];
     saveData();
   }
@@ -1271,7 +1272,7 @@ function getDefaultData() {
     appointments: [],
     barbers: [
       { id:'carlos', name:'Carlos', role:'Barbero — Con Curso', bio:'Especialista en cortes clásicos y degradados, con gran dominio de la navaja y las técnicas de perfilado. Destaca por su precisión, atención al detalle y compromiso con la calidad en cada servicio. Perfeccionista y profesional, busca siempre ofrecer el mejor resultado, adaptando cada corte al estilo y preferencias de cada cliente.', tags:['Corte clásico','Degradado','Barba','Cejas','Corte + Cejas'], color1:'#D4708A', color2:'#F2B5C8', img:'https://i.postimg.cc/QNgF3jWm/c-1-0.jpg' },
-      { id:'iker', name:'Iker', role:'Barbero — Estilo Completo', bio:'Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.', tags:['Corte completo','Barba','Corte + Barba','Cejas','VIP'], color1:'#A87DB8', color2:'#C9A4D4', img:'https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=700&q=80' },
+      { id:'iker', name:'Iker', role:'Barbero — Estilo Completo', bio:'Amante de la música y el freestyle, con un buen sentido del humor e interés por ayudar al resto. Carismático y con tema de hablar sobrante. Perfeccionista y honesto, respetuoso con tu tipo de pelo y buscando la mejor versión del cliente, agradecido y atento a las necesidades y pensamientos del cliente.', tags:['Corte completo','Barba','Corte + Barba','Cejas','VIP'], color1:'#A87DB8', color2:'#C9A4D4', img:'https://i.postimg.cc/2887Chm8/perfil-iker.jpg' },
     ],
     logoUrl: 'https://i.postimg.cc/RZJw1d1k/Chat-GPT-Image-2-jun-2026-19-12-16.png',
     gallery: [
@@ -1824,17 +1825,18 @@ function previewPopup() {
   document.getElementById('popupPreviewDesc').innerHTML = desc.replace(/\n/g, '<br>');
   document.getElementById('popupPreviewDesc').style.color = textColor;
   const barberEl = document.getElementById('popupPreviewBarber');
-  const barberData = appData.barbers?.find(x => x.id === barber);
+  const barbersList = barber === 'both' ? appData.barbers || [] : appData.barbers?.filter(x => x.id === barber);
   const imgContainer = document.getElementById('popupPreviewImgContainer');
   const imgEl = document.getElementById('popupPreviewImg');
   if (imgUrl) { imgContainer.style.display = 'block'; imgEl.src = imgUrl; }
   else { imgContainer.style.display = 'none'; }
-  if (showBarber && barberData) {
+  if (showBarber && barbersList.length) {
     barberEl.style.display = 'block';
-    barberEl.innerHTML = `<div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:8px">
-      <img src="${barberData.img}" style="width:40px;height:40px;border-radius:50%;object-fit:cover">
-      <div style="text-align:left"><strong>${barberData.name}</strong>${price ? `<br><span style="font-size:0.85rem">${price}€</span>` : ''}</div>
-    </div>`;
+    barberEl.innerHTML = barbersList.map(b => `
+      <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:6px">
+        <img src="${b.img}" style="width:36px;height:36px;border-radius:50%;object-fit:cover">
+        <div style="text-align:left"><strong>${b.name}</strong>${price ? `<br><span style="font-size:0.85rem">${price}€</span>` : ''}</div>
+      </div>`).join('');
   } else {
     barberEl.style.display = 'none';
   }
