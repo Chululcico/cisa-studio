@@ -1098,12 +1098,14 @@ function submitBooking() {
   const parts = date.split('-');
   const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   const fechaStr = `${parseInt(parts[2])} ${months[parseInt(parts[1])-1]} ${parts[0]}`;
+  var authData = JSON.parse(localStorage.getItem('cisa_auth') || '{}');
+  var dir = selectedBarber === 'iker' ? (authData.addressIker || 'Calle Salamanca número 45') : (authData.addressCarlos || 'Calle Salamanca número 53');
   document.getElementById('successDetail').innerHTML = `
     <strong>${name}</strong>, tu cita ha sido reservada.<br><br>
     ${fechaStr} a las ${selectedTime}<br>
     ${selectedBarber.charAt(0).toUpperCase()+selectedBarber.slice(1)} — ${svc.name}<br>
     ${price}€<br><br>
-    Te esperamos en <span id="successAddress">Calle Salamanca número 53</span>.
+    Te esperamos en ${dir}.
   `;
 }
 
